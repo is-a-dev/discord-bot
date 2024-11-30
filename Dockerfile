@@ -1,22 +1,9 @@
-FROM node:latest
+FROM node:23
 
-# Create the directory!
-RUN mkdir -p /usr/src/bot
-WORKDIR /usr/src/bot
+WORKDIR /app
 
-# Copy and Install our bot
-COPY package.json /usr/src/bot
+COPY package*.json ./
 RUN npm install
+COPY . .
 
-# For Debugging
-#RUN apt-get update && apt-get install -y \
-#    nano \
-#    curl \
-#    git \
-#    && rm -rf /var/lib/apt/lists/*
-
-# Our precious bot
-COPY . /usr/src/bot
-
-# Start me!
-CMD ["npm", "start"]
+CMD npm start
