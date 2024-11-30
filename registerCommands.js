@@ -3,6 +3,10 @@ const fs = require("node:fs");
 const path = require("node:path");
 require("dotenv").config();
 
+const privateKey = fs.readFileSync('/keys/private_key.pem', 'utf8');
+
+console.log(privateKey)
+
 const token = process.env.DISCORD_TOKEN;
 const clientId = process.env.DISCORD_CLIENT_ID;
 const guildId = process.env.DISCORD_GUILD_ID;
