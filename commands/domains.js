@@ -24,7 +24,7 @@ module.exports = {
         if (maintainers) {
             const maintainer = "is-a-dev";
 
-            await fetch("https://raw-api.is-a.dev")
+            await fetch("https://raw.is-a.dev")
                 .then((response) => response.json())
                 .then(async (data) => {
                     for (let i = 0; i < data.length; i++) {
