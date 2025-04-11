@@ -5,7 +5,6 @@ const registerDomain = require("./buttons/registerDomain")
 const RecordType = require("./buttons/RecordType")
 const ConfirmRegister = require("./buttons/ConfirmRegister")
 const Cancel = require("./buttons/Cancel")
-const AproveApeal = require("./buttons/AproveApeal")
 const Owl = require("./buttons/Owl")
 module.exports = async function (interaction) {
     if (interaction.customId === "deleteDomain") {
@@ -34,8 +33,5 @@ module.exports = async function (interaction) {
     }
     if (interaction.customId === "cancel") {
         Cancel(interaction);
-    }
-    if (interaction.customId.startsWith("aprove-")) {
-        AproveApeal(interaction);
     }
 }

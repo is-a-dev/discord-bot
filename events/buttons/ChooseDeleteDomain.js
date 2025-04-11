@@ -11,7 +11,7 @@ module.exports = async function (interaction) {
         return await interaction.editReply({ embeds: [embed] });
     }
     const username = data.githubUsername;
-    fetch("https://raw-api.is-a.dev")
+    fetch("https://raw.is-a.dev")
             .then((response) => response.json())
             .then(async (data) => {
                 let found = false;

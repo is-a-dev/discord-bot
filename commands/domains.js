@@ -37,7 +37,7 @@ module.exports = {
                     }
                 });
         }
-        fetch("https://raw-api.is-a.dev")
+        fetch("https://raw.is-a.dev")
             .then((response) => response.json())
             .then(async (data) => {
                 for (let i = 0; i < data.length; i++) {
