@@ -8,10 +8,7 @@ import { emojis as emoji } from "../../../config.json";
 const command: Command = {
     name: "zone-updated",
     description: "Get the last time the is-a.dev zone was updated.",
-    integration_types: [0, 1],
-    contexts: [0, 1, 2],
     options: [],
-    default_member_permissions: null,
     botPermissions: [],
     requiredRoles: [],
     cooldown: 5,

@@ -8,8 +8,6 @@ import { emojis as emoji } from "../../../config.json";
 const command: Command = {
     name: "redirect-config",
     description: "Get a is-a.dev subdomain's redirect configuration.",
-    integration_types: [0, 1],
-    contexts: [0, 1, 2],
     options: [
         {
             type: 3,
@@ -20,7 +18,6 @@ const command: Command = {
             autocomplete: true,
         },
     ],
-    default_member_permissions: null,
     botPermissions: [],
     requiredRoles: [],
     cooldown: 5,

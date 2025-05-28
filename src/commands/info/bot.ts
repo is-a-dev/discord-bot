@@ -7,10 +7,7 @@ const bot = require("../../../package.json");
 const command: Command = {
     name: "bot",
     description: "Different information about the bot.",
-    integration_types: [0, 1],
-    contexts: [0, 1, 2],
     options: [],
-    default_member_permissions: null,
     botPermissions: [],
     requiredRoles: [],
     cooldown: 5,

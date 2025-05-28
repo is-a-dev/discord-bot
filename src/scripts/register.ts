@@ -48,7 +48,10 @@ export default async function (client: ExtendedClient, guildId: string) {
 
         for (const file of files) {
             const command = require(`../commands/${file}`);
-            if (command.enabled) commands.push(command);
+            if (command.enabled) {
+                if (!command.contexts) command.contexts = [0]; // Default to GUILD
+                if (!command.integration_types) command.integration_types = [0]; // Default to GUILD_INSTALL
+            }
         }
     }
 

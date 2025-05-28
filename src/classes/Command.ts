@@ -7,10 +7,10 @@ type Role = keyof typeof roles;
 export default class Command {
     public name: string;
     public description: string;
-    public integration_types: number[];
-    public contexts: number[];
+    public integration_types?: number[] | [0];
+    public contexts?: number[] | [0];
     public options: ApplicationCommandOptionData[];
-    public default_member_permissions: Permissions | null;
+    public default_member_permissions?: Permissions | null;
     public botPermissions: PermissionResolvable[];
     public requiredRoles: Role[];
     public cooldown: number;

@@ -9,8 +9,6 @@ import { getDirs } from "../../util/functions";
 const command: Command = {
     name: "help",
     description: "Displays a list of all my commands.",
-    integration_types: [0, 1],
-    contexts: [0, 1, 2],
     options: [
         {
             type: 3,
@@ -19,7 +17,6 @@ const command: Command = {
             required: false,
         },
     ],
-    default_member_permissions: null,
     botPermissions: [],
     requiredRoles: [],
     cooldown: 5,
