@@ -33,9 +33,9 @@ const command: Command = {
             const subdomain = interaction.options.get("subdomain").value;
 
             const res = (await axios.get("https://raw.is-a.dev/v2.json")).data;
-            const subdomainData = res.find((entry: any) => entry.subdomain === subdomain);
+            const data = res.find((entry: any) => entry.subdomain === subdomain);
 
-            if (!subdomainData) {
+            if (!data) {
                 const noResult = new Discord.EmbedBuilder()
                     .setColor(client.config.embeds.error as ColorResolvable)
                     .setDescription(`${emoji.cross} \`${subdomain}.is-a.dev\` does not exist.`);
@@ -44,7 +44,7 @@ const command: Command = {
                 return;
             }
 
-            if (!subdomainData.records.URL && !subdomainData?.redirect_config?.custom_paths) {
+            if (!data.records.URL && !data?.redirect_config?.custom_paths) {
                 const noResult = new Discord.EmbedBuilder()
                     .setColor(client.config.embeds.error as ColorResolvable)
                     .setDescription(`${emoji.cross} \`${subdomain}.is-a.dev\` does not have any URL configurations.`);
@@ -57,18 +57,18 @@ const command: Command = {
                 .setColor(client.config.embeds.default as ColorResolvable)
                 .setTitle(`${subdomain}.is-a.dev`);
 
-            if (subdomainData.records.URL) {
-                urlRecord.setDescription(`${subdomainData.records.URL}`);
+            if (data.records.URL) {
+                urlRecord.setDescription(`${data.records.URL}`);
                 urlRecord.addFields({
                     name: "Redirect Paths",
-                    value: subdomainData?.redirect_config?.redirect_paths ? emoji.tick : emoji.cross,
+                    value: data?.redirect_config?.redirect_paths ? emoji.tick : emoji.cross,
                 });
             }
 
-            if (subdomainData?.redirect_config?.custom_paths) {
+            if (data?.redirect_config?.custom_paths) {
                 urlRecord.addFields({
                     name: "Custom Paths",
-                    value: Object.entries(subdomainData.redirect_config.custom_paths)
+                    value: Object.entries(data.redirect_config.custom_paths)
                         .map(([path, url]) => `\`${path}\`: ${url}`)
                         .join("\n"),
                 });

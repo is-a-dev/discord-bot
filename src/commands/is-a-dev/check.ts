@@ -44,9 +44,9 @@ const command: Command = {
             }
 
             const res = (await axios.get("https://raw.is-a.dev/v2.json")).data;
-            const subdomainData = res.find((entry: any) => entry.subdomain === subdomain);
+            const data = res.find((entry: any) => entry.subdomain === subdomain);
 
-            if (!subdomainData) {
+            if (!data) {
                 const available = new Discord.EmbedBuilder()
                     .setColor(client.config.embeds.default as ColorResolvable)
                     .setDescription(`${emoji.tick} \`${subdomain}.is-a.dev\` is available!`);
@@ -60,14 +60,14 @@ const command: Command = {
 
                 await interaction.editReply({ embeds: [available], components: [registerButton] });
                 return;
-            } else if (subdomainData.internal) {
+            } else if (data.internal) {
                 const internal = new Discord.EmbedBuilder()
                     .setColor(client.config.embeds.error as ColorResolvable)
                     .setDescription(`${emoji.cross} \`${subdomain}.is-a.dev\` is being used internally.`);
 
                 await interaction.editReply({ embeds: [internal] });
                 return;
-            } else if (subdomainData.reserved) {
+            } else if (data.reserved) {
                 const reserved = new Discord.EmbedBuilder()
                     .setColor(client.config.embeds.error as ColorResolvable)
                     .setDescription(`${emoji.cross} \`${subdomain}.is-a.dev\` is reserved.`);

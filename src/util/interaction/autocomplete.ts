@@ -8,7 +8,7 @@ export = async (client: ExtendedClient, interaction: AutocompleteInteraction) =>
 
         if (!command) return;
 
-        if (!command.enabled) return await interaction.respond([]);
+        if (!command.enabled || !command.autocomplete) return await interaction.respond([]);
 
         const member = await interaction?.guild.members.fetch(interaction.user.id);
 

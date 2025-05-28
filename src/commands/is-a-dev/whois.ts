@@ -51,7 +51,8 @@ const command: Command = {
                     iconURL: `https://github.com/${data.owner?.username}.png`,
                     url: `https://github.com/${data.owner?.username}`
                 })
-                .setTitle(`${subdomain}.is-a.dev`);
+                .setTitle(`${subdomain}.is-a.dev`)
+                .setTimestamp();
 
             if (!data.internal && !data.reserved) {
                 if (!subdomain.includes("_")) {
@@ -143,7 +144,7 @@ const command: Command = {
                 }
 
                 if (records.length > 0 && !data.reserved && !data.internal) {
-                    whoisResult.setDescription(`### DNS Records\n${records.join("\n")}`);
+                    whoisResult.setDescription(`**DNS Records**\n\n${records.join("\n")}`);
                 }
 
                 if (data?.redirect_config?.custom_paths) {
