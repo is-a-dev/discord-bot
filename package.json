@@ -1,0 +1,32 @@
+{
+  "name": "is-a-dev-discord-bot",
+  "version": "1.0.0",
+  "description": "A utility bot for managing is-a.dev.",
+  "homepage": "https://github.com/is-a-dev/discord-bot#readme",
+  "bugs": {
+    "url": "https://github.com/is-a-dev/discord-bot/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/is-a-dev/discord-bot.git"
+  },
+  "license": "MIT",
+  "author": "William Harrison",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "npx tsc",
+    "start": "npm run build && node dist/index.js"
+  },
+  "dependencies": {
+    "@sentry/node": "9.22.0",
+    "@sentry/profiling-node": "9.22.0",
+    "axios": "1.9.0",
+    "discord.js": "14.19.3",
+    "dns-query": "0.11.2",
+    "dotenv": "16.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "22.15.21",
+    "typescript": "5.8.3"
+  }
+}

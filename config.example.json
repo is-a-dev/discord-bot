@@ -1,0 +1,21 @@
+{
+    "embeds": {
+        "default": "#7041FF",
+        "error": "#E74C3C"
+    },
+    "emojis": {
+        "connection_bad": "",
+        "connection_excellent": "",
+        "connection_good": "",
+        "cross": "",
+        "ping": "",
+        "reply": "",
+        "tick": ""
+    },
+    "guild": "",
+    "roles": {
+        "maintainer": "",
+        "owner": "",
+        "staff": ""
+    }
+}
