@@ -22,9 +22,9 @@ export = async (client: ExtendedClient, Discord: typeof import("discord.js"), in
             return;
         }
 
-        const member = interaction.guild?.members.cache.get(interaction.user.id);
+        const member = await interaction?.guild.members.fetch(interaction.user.id);
 
-        if (command.requiredRoles.length && !member?.roles.cache.has(client.config.roles.owner)) {
+        if (command.requiredRoles.length && !member?.roles.cache.has(client.config.roles.owner as string)) {
             let permitted = false;
 
             for (const role of command.requiredRoles) {

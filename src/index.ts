@@ -16,7 +16,11 @@ import config from "../config.json";
 const bot = require("../package.json");
 
 const client = new ExtendedClient({
-    intents: [],
+    intents: [
+        Discord.GatewayIntentBits.Guilds,
+        Discord.GatewayIntentBits.GuildMembers,
+        Discord.GatewayIntentBits.GuildMessages,
+    ],
     presence: {
         activities: [
             {

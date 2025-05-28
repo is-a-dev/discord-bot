@@ -102,7 +102,7 @@ const command: Command = {
             const choices = filteredSubdomains
                 .map((entry: any) => {
                     return {
-                        name: entry.domain,
+                        name: entry.subdomain,
                         value: entry.subdomain,
                     };
                 })
