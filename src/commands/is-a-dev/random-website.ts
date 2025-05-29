@@ -25,7 +25,8 @@ const command: Command = {
             const data = res
                 .filter((entry: any) => entry.owner.username !== "is-a-dev" && !entry.reserved && !entry.internal)
                 .filter((entry: any) => entry.records.A || entry.records.AAAA || entry.records.CNAME)
-                .filter((entry: any) => !entry.subdomain.startsWith("_"));
+                .filter((entry: any) => !entry.subdomain.startsWith("_"))
+                .sort(() => Math.random() - 0.5);
 
             const randomIndex = Math.floor(Math.random() * data.length);
             const randomWebsite = data[randomIndex];
@@ -40,11 +41,7 @@ const command: Command = {
 
             const random = new Discord.EmbedBuilder()
                 .setColor(client.config.embeds.default as ColorResolvable)
-                .setAuthor({
-                    name: randomWebsite.owner.username,
-                    iconURL: `https://github.com/${randomWebsite.owner.username}.png`,
-                    url: `https://github.com/${randomWebsite.owner.username}`
-                })
+                .setThumbnail(`https://github.com/${randomWebsite.owner.username}`)
                 .setTitle(randomWebsite.domain);
 
             const visitButton: any = new Discord.ActionRowBuilder().addComponents(
