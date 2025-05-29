@@ -13,9 +13,8 @@ import {
 } from "discord.js";
 
 import { emojis as emoji } from "../../../config.json";
-import { fetchDomains } from "../../util/domains";
 import ms from "ms";
-import { filterObject } from "../../util/functions";
+import { fetchDomains, filterObject } from "../../util/functions";
 
 const command: Command = {
   name: "generate-domain-json",
@@ -58,7 +57,7 @@ const command: Command = {
       }
 
       let domains = await fetchDomains();
-      const data = domains.find((v) => v.domain === `${subdomain}.is-a.dev`);
+      const data = domains.find((v: any) => v.domain === `${subdomain}.is-a.dev`);
 
       if (data) {
         const noResult = new Discord.EmbedBuilder()
@@ -124,9 +123,9 @@ const command: Command = {
           .setRequired(false),
         new TextInputBuilder()
           .setCustomId("mx-record")
-          .setLabel("MX Record")
-          .setStyle(TextInputStyle.Short)
-          .setPlaceholder("Place your MX Record here")
+          .setLabel("MX Records")
+          .setStyle(TextInputStyle.Paragraph)
+          .setPlaceholder("MX Records are split into an array by commas")
           .setRequired(false),
       ];
 
@@ -176,12 +175,14 @@ const command: Command = {
             });
             const aRecords =
               modalResponse.fields.getTextInputValue("a-records");
+            
+            const mxRecords = modalResponse.fields.getTextInputValue("mx-record");
 
             const { A, cname, txt, mx, github, discord } = {
               cname: modalResponse.fields.getTextInputValue("cname-record"),
               A: aRecords.length ? aRecords.split(",") : [],
               txt: modalResponse.fields.getTextInputValue("txt-record"),
-              mx: modalResponse.fields.getTextInputValue("mx-record"),
+              mx: mxRecords.length ? aRecords.split(",") : [],
 
               // User Data
               github: modalResponse.fields.getTextInputValue("username"),

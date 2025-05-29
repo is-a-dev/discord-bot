@@ -4,6 +4,7 @@ import { AutocompleteInteraction, ChatInputCommandInteraction, ColorResolvable }
 
 import axios from "axios";
 import { emojis as emoji } from "../../../config.json";
+import { fetchDomains } from "../../util/functions";
 
 const command: Command = {
     name: "get-domain-json",
@@ -82,22 +83,15 @@ const command: Command = {
 
         if (option.name === "subdomain") {
             // Fetch all subdomains
-            const res = (await axios.get("https://raw.is-a.dev/v2.json")).data;
+            const res = await fetchDomains();
 
             // Filter subdomains
-            const filteredSubdomains = res.filter((entry: any) => entry.subdomain.startsWith(option.value) && !entry.internal && !entry.reserved);
-
-            // Map subdomains to choices
-            const choices = filteredSubdomains
-                .map((entry: any) => {
-                    return {
-                        name: entry.subdomain,
-                        value: entry.subdomain
-                    };
-                })
+            const filteredSubdomains = res
+                .filter((entry: any) => entry.subdomain.startsWith(option.value) && !entry.internal && !entry.reserved)
+                .map((entry: any) => ({ name: entry.subdomain, value: entry.subdomain }))
                 .slice(0, 25);
 
-            await interaction.respond(choices);
+            await interaction.respond(filteredSubdomains);
         }
     }
 };
