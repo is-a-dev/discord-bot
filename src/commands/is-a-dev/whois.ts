@@ -47,9 +47,9 @@ const command: Command = {
             const whoisResult = new Discord.EmbedBuilder()
                 .setColor(client.config.embeds.default as ColorResolvable)
                 .setAuthor({
-                    name: data.owner?.username,
-                    iconURL: `https://github.com/${data.owner?.username}.png`,
-                    url: `https://github.com/${data.owner?.username}`
+                    name: data.owner.username,
+                    iconURL: `https://github.com/${data.owner.username}.png`,
+                    url: `https://github.com/${data.owner.username}`
                 })
                 .setTitle(`${subdomain}.is-a.dev`)
                 .setTimestamp();
