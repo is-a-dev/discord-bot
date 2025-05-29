@@ -2,8 +2,8 @@ import Command from "../../classes/Command";
 import ExtendedClient from "../../classes/ExtendedClient";
 import { ChatInputCommandInteraction, ColorResolvable } from "discord.js";
 
-import axios from "axios";
 import { emojis as emoji } from "../../../config.json";
+import { fetchDomains } from "../../util/functions";
 
 const command: Command = {
     name: "available-single-letters",
@@ -23,7 +23,7 @@ const command: Command = {
         try {
             const subdomains = "abcdefghijklmnopqrstuvwxyz0123456789".split("");
 
-            const res = (await axios.get("https://raw.is-a.dev/v2.json")).data;
+            const res = await fetchDomains();
 
             const taken = res.map((entry: any) => entry.subdomain);
             const available = subdomains.filter((subdomain) => !taken.includes(subdomain));

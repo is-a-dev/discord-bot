@@ -2,8 +2,8 @@ import Command from "../../classes/Command";
 import ExtendedClient from "../../classes/ExtendedClient";
 import { AutocompleteInteraction, ChatInputCommandInteraction, ColorResolvable } from "discord.js";
 
-import axios from "axios";
 import { emojis as emoji } from "../../../config.json";
+import { fetchDomains } from "../../util/functions";
 
 const command: Command = {
     name: "redirect-config",
@@ -32,7 +32,7 @@ const command: Command = {
         try {
             const subdomain = interaction.options.get("subdomain").value;
 
-            const res = (await axios.get("https://raw.is-a.dev/v2.json")).data;
+            const res = await fetchDomains();
             const data = res.find((entry: any) => entry.subdomain === subdomain);
 
             if (!data) {
@@ -84,28 +84,21 @@ const command: Command = {
 
         if (option.name === "subdomain") {
             // Fetch all subdomains
-            const res = (await axios.get("https://raw.is-a.dev/v2.json")).data;
+            const res = await fetchDomains();
 
             // Filter subdomains
-            const filteredSubdomains = res.filter(
-                (entry: any) =>
-                    entry.subdomain.startsWith(option.value) &&
-                    (entry.records.URL || entry.redirect_config?.custom_paths) &&
-                    !entry.reserved &&
-                    !entry.internal,
-            );
-
-            // Map subdomains to choices
-            const choices = filteredSubdomains
-                .map((entry: any) => {
-                    return {
-                        name: entry.subdomain,
-                        value: entry.subdomain,
-                    };
-                })
+            const filteredSubdomains = res
+                .filter(
+                    (entry: any) =>
+                        entry.subdomain.startsWith(option.value) &&
+                        (entry.records.URL || entry.redirect_config?.custom_paths) &&
+                        !entry.reserved &&
+                        !entry.internal,
+                )
+                .map((entry: any) => ({ name: entry.subdomain, value: entry.subdomain }))
                 .slice(0, 25);
 
-            await interaction.respond(choices);
+            await interaction.respond(filteredSubdomains);
         }
     },
 };

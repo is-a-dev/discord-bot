@@ -2,8 +2,8 @@ import Command from "../../classes/Command";
 import ExtendedClient from "../../classes/ExtendedClient";
 import { ChatInputCommandInteraction, ColorResolvable } from "discord.js";
 
-import axios from "axios";
 import { emojis as emoji } from "../../../config.json";
+import { fetchDomains } from "../../util/functions";
 
 const command: Command = {
     name: "check",
@@ -43,7 +43,7 @@ const command: Command = {
                 return;
             }
 
-            const res = (await axios.get("https://raw.is-a.dev/v2.json")).data;
+            const res = await fetchDomains();
             const data = res.find((entry: any) => entry.subdomain === subdomain);
 
             if (!data) {
