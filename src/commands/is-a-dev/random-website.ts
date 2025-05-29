@@ -41,7 +41,7 @@ const command: Command = {
 
             const random = new Discord.EmbedBuilder()
                 .setColor(client.config.embeds.default as ColorResolvable)
-                .setThumbnail(`https://github.com/${randomWebsite.owner.username}`)
+                .setThumbnail(`https://github.com/${randomWebsite.owner.username}.png`)
                 .setTitle(randomWebsite.domain);
 
             const visitButton: any = new Discord.ActionRowBuilder().addComponents(
