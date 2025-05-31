@@ -28,11 +28,13 @@ const command: Command = {
         Discord: typeof import("discord.js")
     ) {
         try {
-            const user = interaction.options.getString("user");
+            const user = interaction.options.getString("user")?.toLowerCase();
 
-            const data = await getDomains(true, true, true);
+            const data = user
+                ? (await getDomains(true, true, true)).filter((domain) => domain.owner.username.toLowerCase() === user)
+                : await getDomains(true, true, true);
 
-            if (user && !data.some((entry: any) => entry.owner.username.toLowerCase() === user.toLowerCase())) {
+            if (user && !data.some((entry: any) => entry.owner.username.toLowerCase() === user)) {
                 const noResult = new Discord.EmbedBuilder()
                     .setColor(client.config.embeds.error as ColorResolvable)
                     .setDescription(`${emoji.cross} No data found for \`${user}\`.`);
@@ -43,9 +45,9 @@ const command: Command = {
 
             const statistics = new Discord.EmbedBuilder()
                 .setColor(client.config.embeds.default as ColorResolvable)
-                .setTitle(user? `${user}'s Statistics` : "is-a.dev Statistics")
+                .setTitle(user ? `${user}'s Statistics` : "is-a.dev Statistics")
                 .setTimestamp();
-            
+
             if (user) statistics.setThumbnail(`https://github.com/${user}.png`);
 
             const mainStats = [];
@@ -103,14 +105,12 @@ const command: Command = {
         const option = interaction.options.getFocused(true);
 
         if (option.name === "user") {
-            const res = await getDomains();
+            const res = (await getDomains()).map((entry: any) => entry.owner.username.toLowerCase());
 
-            const filteredUsers = res
-                .map((entry: any) => entry.owner.username.toLowerCase())
-                .filter((username) => username.startsWith(option.value))
-                .slice(0, 25);
+            const uniqueUsers = Array.from(new Set(res)).sort();
 
-            // Map usernames to choices
+            const filteredUsers = uniqueUsers.filter((username) => username.startsWith(option.value.toLowerCase()));
+
             const choices = filteredUsers.map((username) => ({
                 name: username,
                 value: username
