@@ -151,7 +151,7 @@ const command: Command = {
                 }
 
                 if (records.length > 0 && !data.reserved && !data.internal) {
-                    whoisResult.setDescription(`**DNS Records**\n\n${records.join("\n")}`);
+                    whoisResult.setDescription(records.join("\n"));
                 }
 
                 if (data?.redirect_config?.custom_paths) {
