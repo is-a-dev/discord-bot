@@ -114,7 +114,7 @@ const command: Command = {
             const choices = filteredUsers.map((username) => ({
                 name: username,
                 value: username
-            }));
+            })).slice(0, 25);
 
             await interaction.respond(choices);
         }
