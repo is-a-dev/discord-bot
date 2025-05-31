@@ -28,7 +28,7 @@ const command: Command = {
         Discord: typeof import("discord.js")
     ) {
         try {
-            const user = interaction.options.getString("user")?.toLowerCase();
+            const user = (interaction.options.get("user")?.value as string)?.toLowerCase();
 
             const data = await getDomains(client, { excludeFlags: ["internal", "reserved"], username: user || null });
 

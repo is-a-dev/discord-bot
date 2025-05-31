@@ -72,7 +72,7 @@ export async function getDomains(
         }
     }
 
-    if (excludeFlags.length > 0 && hasFlags.length > 0) {
+    if (excludeFlags?.length > 0 && hasFlags?.length > 0) {
         const commonFlags = excludeFlags.filter((flag) => hasFlags.includes(flag));
         if (commonFlags.length > 0) {
             throw new Error(`Cannot use both excludeFlags and hasFlags with the same flags: ${commonFlags.join(", ")}`);
@@ -85,7 +85,7 @@ export async function getDomains(
         if (excludeFlags?.length > 0 && excludeFlags?.some((flag) => entry[flag])) return false;
         if (hasFlags?.length > 0 && !hasFlags?.every((flag) => entry[flag])) return false;
         if (hasRecords?.length > 0 && !hasRecords?.some((record) => entry.records[record])) return false;
-        if (subdomain && entry.subdomain !== subdomain) return false;
+        if (subdomain && entry.subdomain.toLowerCase() !== subdomain.toLowerCase()) return false;
         if (subdomainStartsWith && !entry.subdomain.toLowerCase().startsWith(subdomainStartsWith.toLowerCase()))
             return false;
         if (username && entry.owner.username.toLowerCase() !== username.toLowerCase()) return false;

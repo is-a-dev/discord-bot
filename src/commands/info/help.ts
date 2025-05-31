@@ -29,7 +29,7 @@ const command: Command = {
         Discord: typeof import("discord.js"),
     ) {
         try {
-            const cmd: any = interaction.options.get("command")?.value;
+            const cmd: any = (interaction.options.get("command")?.value as string)?.toLowerCase();
 
             const commands: string[] = [];
 
