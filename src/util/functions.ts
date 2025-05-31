@@ -82,9 +82,9 @@ export async function getDomains(
     const results = client.rawAPICache.filter((entry: Domain) => {
         if (excludeIAD && entry.owner.username === "is-a-dev") return false;
         if (excludeUnderscores && entry.subdomain.includes("_")) return false;
-        if (excludeFlags.length > 0 && excludeFlags.some((flag) => entry[flag])) return false;
-        if (hasFlags.length > 0 && !hasFlags.every((flag) => entry[flag])) return false;
-        if (hasRecords.length > 0 && !hasRecords.some((record) => entry.records[record])) return false;
+        if (excludeFlags?.length > 0 && excludeFlags?.some((flag) => entry[flag])) return false;
+        if (hasFlags?.length > 0 && !hasFlags?.every((flag) => entry[flag])) return false;
+        if (hasRecords?.length > 0 && !hasRecords?.some((record) => entry.records[record])) return false;
         if (subdomain && entry.subdomain !== subdomain) return false;
         if (subdomainStartsWith && !entry.subdomain.toLowerCase().startsWith(subdomainStartsWith.toLowerCase()))
             return false;
