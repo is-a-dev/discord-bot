@@ -82,7 +82,7 @@ export async function getDomains(
         return true;
     });
 
-    return result_limit >= 0 ? results : results.slice(0, result_limit);
+    return result_limit <= 0 ? results : results.slice(0, result_limit);
 }
 
 export async function getUsernames(client: ExtendedClient, options?: { result_limit: number }): Promise<string[]> {
@@ -104,7 +104,7 @@ export async function getUsernames(client: ExtendedClient, options?: { result_li
         new Set(client.rawAPICache.map((entry: Domain) => entry.owner.username.toLowerCase()))
     ).sort();
 
-    return result_limit >= 0 ? results : results.slice(0, result_limit);
+    return result_limit <= 0 ? results : results.slice(0, result_limit);
 }
 
 export function loadHandlers(client: ExtendedClient): void {
