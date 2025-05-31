@@ -103,7 +103,7 @@ const command: Command = {
         const option = interaction.options.getFocused(true);
 
         if (option.name === "user") {
-            const users = await getUsernames(client, { result_limit: 25 });
+            const users = await getUsernames(client, { resultLimit: 25 });
 
             const filteredUsers = users.filter((username) => username.startsWith(option.value.toLowerCase()));
 

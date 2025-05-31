@@ -206,7 +206,7 @@ const command: Command = {
             // Fetch all subdomains
             const res = await getDomains(client, {
                 excludeFlags: ["internal", "reserved"],
-                result_limit: 25,
+                resultLimit: 25,
                 subdomainStartsWith: option.value
             });
 

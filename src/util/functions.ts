@@ -26,28 +26,38 @@ export async function getDirs(path: string): Promise<string[]> {
 
 export async function getDomains(
     client: ExtendedClient,
-    options?: {
+    options: {
         excludeIAD?: boolean;
         excludeUnderscores?: boolean;
         excludeFlags?: ("internal" | "reserved")[];
         hasFlags?: ("internal" | "reserved")[];
         hasRecords?: ("A" | "AAAA" | "CAA" | "CNAME" | "DS" | "MX" | "NS" | "SRV" | "TLSA" | "TXT" | "URL")[];
-        result_limit?: number;
+        resultLimit?: number;
         subdomain?: string | null;
         subdomainStartsWith?: string;
         username?: string | null;
+    } = {
+        excludeIAD: false,
+        excludeUnderscores: false,
+        excludeFlags: [],
+        hasFlags: [],
+        hasRecords: [],
+        resultLimit: 0,
+        subdomain: null,
+        subdomainStartsWith: "",
+        username: null
     }
 ): Promise<Domain[]> {
     const {
-        excludeIAD = false,
-        excludeUnderscores = false,
-        excludeFlags = [],
-        hasFlags = [],
-        hasRecords = [],
-        result_limit = 0,
-        subdomain = null,
-        subdomainStartsWith = "",
-        username = null
+        excludeIAD,
+        excludeUnderscores,
+        excludeFlags,
+        hasFlags,
+        hasRecords,
+        resultLimit,
+        subdomain,
+        subdomainStartsWith,
+        username
     } = options;
 
     if (
@@ -82,11 +92,14 @@ export async function getDomains(
         return true;
     });
 
-    return result_limit <= 0 ? results : results.slice(0, result_limit);
+    return resultLimit <= 0 ? results : results.slice(0, resultLimit);
 }
 
-export async function getUsernames(client: ExtendedClient, options?: { result_limit: number }): Promise<string[]> {
-    const { result_limit = 0 } = options;
+export async function getUsernames(
+    client: ExtendedClient,
+    options: { resultLimit: number } = { resultLimit: 0 }
+): Promise<string[]> {
+    const { resultLimit } = options;
 
     if (
         !client.rawAPICache ||
@@ -104,7 +117,7 @@ export async function getUsernames(client: ExtendedClient, options?: { result_li
         new Set(client.rawAPICache.map((entry: Domain) => entry.owner.username.toLowerCase()))
     ).sort();
 
-    return result_limit <= 0 ? results : results.slice(0, result_limit);
+    return resultLimit <= 0 ? results : results.slice(0, resultLimit);
 }
 
 export function loadHandlers(client: ExtendedClient): void {
