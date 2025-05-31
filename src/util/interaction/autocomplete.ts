@@ -47,7 +47,7 @@ export = async (client: ExtendedClient, interaction: AutocompleteInteraction) =>
         try {
             // Log interaction to console
             console.log(
-                `[interactionCreate] [autocomplete] ${interaction.user.tag} (${interaction.user.id}): /${interaction.commandName} ${interaction.options.getFocused(true).name}${interaction.options.getFocused(true).value ? `:${interaction.options.getFocused(true).value}` : ""}`,
+                `[interactionCreate] [autocomplete] ${interaction.user.tag} (${interaction.user.id}): /${interaction.commandName} ${interaction.options.getFocused(true).name}${interaction.options.getFocused(true).value ? `:${interaction.options.getFocused(true).value}` : ""}`
             );
 
             await command.autocomplete(interaction, client);

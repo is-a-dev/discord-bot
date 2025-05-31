@@ -18,11 +18,11 @@ const command: Command = {
     async execute(
         interaction: ChatInputCommandInteraction,
         client: ExtendedClient,
-        Discord: typeof import("discord.js"),
+        Discord: typeof import("discord.js")
     ) {
         try {
             const res = await lookupTxt(`_zone-updated.is-a.dev`, {
-                endpoints: ["one.one.one.one", "dns.google"],
+                endpoints: ["one.one.one.one", "dns.google"]
             });
 
             if (!res.entries[0]) {
@@ -37,14 +37,14 @@ const command: Command = {
             const zoneUpdated = new Discord.EmbedBuilder()
                 .setColor(client.config.embeds.default as ColorResolvable)
                 .setDescription(
-                    `The **is-a.dev** zone was last updated <t:${Math.floor(Number(res.entries[0].data) / 1000)}:F>.`,
+                    `The **is-a.dev** zone was last updated <t:${Math.floor(Number(res.entries[0].data) / 1000)}:F>.`
                 );
 
             await interaction.editReply({ embeds: [zoneUpdated] });
         } catch (err) {
             client.logCommandError(err, interaction, Discord);
         }
-    },
+    }
 };
 
 export = command;

@@ -25,8 +25,8 @@ export default async function (client: ExtendedClient, guildId: string) {
             const applicationCommands: any = await rest.put(
                 Routes.applicationGuildCommands(process.env.CLIENT_ID, guildId),
                 {
-                    body: commands,
-                },
+                    body: commands
+                }
             );
 
             for (const command of applicationCommands) {

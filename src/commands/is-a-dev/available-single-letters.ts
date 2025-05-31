@@ -36,14 +36,14 @@ const command: Command = {
                 await interaction.editReply({ embeds: [noAvailable] });
                 return;
             }
-            
+
             const availableList = available.map((subdomain) => `- \`${subdomain}.is-a.dev\``).join("\n");
 
             const availableEmbed = new Discord.EmbedBuilder()
                 .setColor(client.config.embeds.default as ColorResolvable)
                 .setTitle("Available Single Letter Subdomains")
                 .setDescription(availableList)
-                .setTimestamp()
+                .setTimestamp();
 
             await interaction.editReply({ embeds: [availableEmbed] });
         } catch (err) {

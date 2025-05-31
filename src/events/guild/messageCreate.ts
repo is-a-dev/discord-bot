@@ -1,0 +1,91 @@
+import Event from "../../classes/Event";
+import ExtendedClient from "../../classes/ExtendedClient";
+import { ColorResolvable, Message, PermissionResolvable } from "discord.js";
+
+import axios from "axios";
+import { emojis as emoji } from "../../../config.json";
+import { cap } from "../../util/functions";
+
+const event: Event = {
+    name: "messageCreate",
+    once: false,
+    async execute(client: ExtendedClient, Discord: typeof import("discord.js"), message: Message) {
+        try {
+            const requiredPerms: PermissionResolvable = ["SendMessages", "EmbedLinks", "AttachFiles"];
+
+            if (message.author.bot || !message.guild || message.guild.id !== client.config.guild) return;
+            if (!message.guild.members.me.permissions.has(requiredPerms)) return;
+
+            // GitHub Pull Requests
+            if (message.content.startsWith("##")) {
+                const prUrl = message.content.split(" ")[0].slice(2);
+                const prId = prUrl.split("/").pop();
+
+                if (!prId || !/^\d+$/.test(prId)) return;
+                if (prId.length > 7) return;
+
+                try {
+                    const res = (await axios.get(`https://api.github.com/repos/is-a-dev/register/pulls/${prId}`)).data;
+
+                    const color = {
+                        open: "#2cbe4e" as ColorResolvable,
+                        closed: "#cb2431" as ColorResolvable,
+                        merged: "#6f42c1" as ColorResolvable
+                    };
+
+                    const stateEmojis = {
+                        open: emoji.pr_open,
+                        closed: emoji.pr_closed,
+                        merged: emoji.pr_merged
+                    };
+
+                    const state = res.state === "open" ? "open" : res.merged_at ? "merged" : "closed";
+
+                    const prEmbed = new Discord.EmbedBuilder()
+                        .setColor(color[state])
+                        .setAuthor({ name: res.user.login, iconURL: res.user.avatar_url, url: res.user.html_url })
+                        .setTitle(cap(res.title, 100))
+                        .setURL(res.html_url)
+                        .addFields(
+                            {
+                                name: "Status",
+                                value: `${stateEmojis[state]} ${state.charAt(0).toUpperCase() + state.slice(1)}`,
+                                inline: true
+                            },
+                            {
+                                name: "Labels",
+                                value: res.labels.length
+                                    ? `\`${res.labels.map((l: { name: string }) => l.name).join("`, `")}\``
+                                    : "*N/A*",
+                                inline: true
+                            }
+                        )
+                        .setTimestamp(res.created_at);
+
+                    await message.reply({ embeds: [prEmbed] });
+                } catch (err) {
+                    if (axios.isAxiosError(err) && err.response?.status === 404) {
+                        const notFound = new Discord.EmbedBuilder()
+                            .setColor(client.config.embeds.error as ColorResolvable)
+                            .setDescription(`${emoji.cross} Pull request not found.`);
+
+                        await message.reply({ embeds: [notFound] });
+                        return;
+                    }
+
+                    client.logError(err);
+
+                    const error = new Discord.EmbedBuilder()
+                        .setColor(client.config.embeds.error as ColorResolvable)
+                        .setDescription(`${emoji.cross} An error occurred while fetching the pull request.`);
+
+                    await message.reply({ embeds: [error] });
+                }
+            }
+        } catch (err) {
+            client.logError(err);
+        }
+    }
+};
+
+export = event;

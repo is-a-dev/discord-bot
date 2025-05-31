@@ -19,7 +19,8 @@ const client = new ExtendedClient({
     intents: [
         Discord.GatewayIntentBits.Guilds,
         Discord.GatewayIntentBits.GuildMembers,
-        Discord.GatewayIntentBits.GuildMessages
+        Discord.GatewayIntentBits.GuildMessages,
+        Discord.GatewayIntentBits.MessageContent
     ],
     presence: {
         activities: [

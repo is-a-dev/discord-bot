@@ -18,6 +18,12 @@ export async function cacheRawAPI(client: ExtendedClient): Promise<void> {
     }
 }
 
+export function cap(str: string, length: number) {
+    if (str == null || str?.length <= length) return str;
+
+    return str.substr(0, length - 1) + "**\u2026**";
+}
+
 export async function getDirs(path: string): Promise<string[]> {
     return (await fs.promises.readdir(path, { withFileTypes: true }))
         .filter((dirent) => dirent.isDirectory())
@@ -126,6 +132,21 @@ export function loadHandlers(client: ExtendedClient): void {
     for (const file of handlers) {
         require(`../handlers/${file}`)(client, Discord);
     }
+}
+
+export function processGitHubMarkdown(content: string): string {
+    content = content.trim();
+    content = content.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, (match, text, url) => `[${text}](${url})`);
+    content = content.replace(/<!--[\s\S]*?-->/g, "");
+    content = content.replace(/<[^>]+>/g, "");
+    content = content.replace(/```[\s\S]*?```/g, (match) => {
+        const codeContent = match.replace(/```/g, "").trim();
+        return `\`${codeContent}\``;
+    });
+    content = content.replace(/`([^`]+)`/g, (match, code) => `\`${code}\``);
+    content = content.replace(/\[x\]/g, "✅").replace(/\[ \]/g, "❌");
+
+    return content;
 }
 
 export type Domain = {

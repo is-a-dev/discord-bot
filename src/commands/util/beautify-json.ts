@@ -40,7 +40,7 @@ const command: Command = {
     ) {
         try {
             const content = interaction.options.get("content").value as string;
-            const tabWidth = interaction.options.get("tab-width")?.value as number || 2;
+            const tabWidth = (interaction.options.get("tab-width")?.value as number) || 2;
 
             let data;
 

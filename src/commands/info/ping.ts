@@ -17,7 +17,7 @@ const command: Command = {
     async execute(
         interaction: ChatInputCommandInteraction,
         client: ExtendedClient,
-        Discord: typeof import("discord.js"),
+        Discord: typeof import("discord.js")
     ) {
         try {
             // Get ping
@@ -49,14 +49,14 @@ const command: Command = {
                 .setColor(client.config.embeds.default as ColorResolvable)
                 .addFields(
                     { name: "Bot Latency", value: botLatencyValue, inline: true },
-                    { name: "API Latency", value: apiLatencyValue, inline: true },
+                    { name: "API Latency", value: apiLatencyValue, inline: true }
                 );
 
             await interaction.reply({ embeds: [ping], flags: MessageFlags.Ephemeral });
         } catch (err) {
             client.logCommandError(err, interaction, Discord);
         }
-    },
+    }
 };
 
 export = command;

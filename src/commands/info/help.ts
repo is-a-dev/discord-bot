@@ -14,8 +14,8 @@ const command: Command = {
             type: 3,
             name: "command",
             description: "Get info on a specific command.",
-            required: false,
-        },
+            required: false
+        }
     ],
     botPermissions: [],
     requiredRoles: [],
@@ -26,7 +26,7 @@ const command: Command = {
     async execute(
         interaction: ChatInputCommandInteraction & any,
         client: ExtendedClient,
-        Discord: typeof import("discord.js"),
+        Discord: typeof import("discord.js")
     ) {
         try {
             const cmd: any = (interaction.options.get("command")?.value as string)?.toLowerCase();
@@ -111,7 +111,7 @@ const command: Command = {
                     .addFields(
                         { name: "Description", value: description },
                         { name: "Cooldown", value: cooldown },
-                        { name: "Bot Permissions", value: botPermissions },
+                        { name: "Bot Permissions", value: botPermissions }
                     )
                     .setTimestamp();
 
@@ -123,7 +123,7 @@ const command: Command = {
         } catch (err) {
             client.logCommandError(err, interaction, Discord);
         }
-    },
+    }
 };
 
 export = command;

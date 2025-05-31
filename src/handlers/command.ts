@@ -36,7 +36,7 @@ export = async (client: ExtendedClient) => {
     client.logCommandError = async function (
         err: Error,
         interaction: CommandInteraction,
-        Discord: typeof import("discord.js"),
+        Discord: typeof import("discord.js")
     ) {
         const id = Sentry.captureException(err);
         console.error(err);

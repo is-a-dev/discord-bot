@@ -16,7 +16,7 @@ const event: Event = {
         } catch (err) {
             client.logError(err);
         }
-    },
+    }
 };
 
 export = event;
