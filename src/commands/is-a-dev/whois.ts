@@ -2,8 +2,8 @@ import Command from "../../classes/Command";
 import ExtendedClient from "../../classes/ExtendedClient";
 import { AutocompleteInteraction, ChatInputCommandInteraction, ColorResolvable } from "discord.js";
 
-import axios from "axios";
 import { emojis as emoji } from "../../../config.json";
+import { getDomains, RecordsObject } from "../../util/functions";
 
 const command: Command = {
     name: "whois",
@@ -32,7 +32,7 @@ const command: Command = {
         try {
             const subdomain = interaction.options.get("subdomain").value as string;
 
-            const res = (await axios.get("https://raw.is-a.dev/v2.json")).data;
+            const res = await getDomains();
             const data = res.find((entry: any) => entry.subdomain === subdomain);
 
             if (!data) {
@@ -75,7 +75,7 @@ const command: Command = {
                     whoisResult.addFields({ name: "Owner Information", value: owner.join("\n") });
                 }
 
-                for (const key of Object.keys(data.records).sort()) {
+                for (const key of Object.keys(data.records).sort() as (keyof RecordsObject)[]) {
                     switch (key) {
                         case "A":
                         case "AAAA":
@@ -102,6 +102,13 @@ const command: Command = {
                             records.push(
                                 `**${key}**: \`${data.records.SRV.map(
                                     (entry: any) => `${entry.priority} ${entry.weight} ${entry.port} ${entry.target}`
+                                ).join("`, `")}\``
+                            );
+                            break;
+                        case "TLSA":
+                            records.push(
+                                `**${key}**: \`${data.records.TLSA.map(
+                                    (entry: any) => `${entry.usage} ${entry.selector} ${entry.matching_type} ${entry.data}`
                                 ).join("`, `")}\``
                             );
                             break;
@@ -196,7 +203,7 @@ const command: Command = {
 
         if (option.name === "subdomain") {
             // Fetch all subdomains
-            const res = (await axios.get("https://raw.is-a.dev/v2.json")).data;
+            const res = await getDomains(true, true, true);
 
             // Filter subdomains
             const filteredSubdomains = res.filter((entry: any) => entry.subdomain.startsWith(option.value));

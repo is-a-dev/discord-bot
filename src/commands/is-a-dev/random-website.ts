@@ -2,8 +2,8 @@ import Command from "../../classes/Command";
 import ExtendedClient from "../../classes/ExtendedClient";
 import { ChatInputCommandInteraction, ColorResolvable } from "discord.js";
 
-import axios from "axios";
 import { emojis as emoji } from "../../../config.json";
+import { getDomains } from "../../util/functions";
 
 const command: Command = {
     name: "random-website",
@@ -21,9 +21,8 @@ const command: Command = {
         Discord: typeof import("discord.js")
     ) {
         try {
-            const res = (await axios.get("https://raw.is-a.dev/v2.json")).data;
+            const res = await getDomains(true, true, true);
             const data = res
-                .filter((entry: any) => entry.owner.username !== "is-a-dev" && !entry.reserved && !entry.internal)
                 .filter((entry: any) => entry.records.A || entry.records.AAAA || entry.records.CNAME)
                 .filter((entry: any) => !entry.subdomain.startsWith("_"))
                 .sort(() => Math.random() - 0.5);

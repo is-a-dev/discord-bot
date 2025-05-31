@@ -2,7 +2,7 @@ import Command from "../../classes/Command";
 import ExtendedClient from "../../classes/ExtendedClient";
 import { ChatInputCommandInteraction, ColorResolvable } from "discord.js";
 
-import axios from "axios";
+import { getDomains } from "../../util/functions";
 
 const command: Command = {
     name: "statistics",
@@ -20,10 +20,7 @@ const command: Command = {
         Discord: typeof import("discord.js")
     ) {
         try {
-            const res = (await axios.get("https://raw.is-a.dev/v2.json")).data;
-            const data = res.filter(
-                (entry: any) => entry.owner.username !== "is-a-dev" && !entry.internal && !entry.reserved
-            );
+            const data = await getDomains(true, true, true);
 
             const statistics = new Discord.EmbedBuilder()
                 .setColor(client.config.embeds.default as ColorResolvable)

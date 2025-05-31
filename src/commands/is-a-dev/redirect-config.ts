@@ -2,8 +2,8 @@ import Command from "../../classes/Command";
 import ExtendedClient from "../../classes/ExtendedClient";
 import { AutocompleteInteraction, ChatInputCommandInteraction, ColorResolvable } from "discord.js";
 
-import axios from "axios";
 import { emojis as emoji } from "../../../config.json";
+import { getDomains } from "../../util/functions";
 
 const command: Command = {
     name: "redirect-config",
@@ -15,8 +15,8 @@ const command: Command = {
             description: "The subdomain you want to find the redirect configuration for.",
             max_length: 253 - ".is-a.dev".length,
             required: true,
-            autocomplete: true,
-        },
+            autocomplete: true
+        }
     ],
     botPermissions: [],
     requiredRoles: [],
@@ -27,12 +27,12 @@ const command: Command = {
     async execute(
         interaction: ChatInputCommandInteraction,
         client: ExtendedClient,
-        Discord: typeof import("discord.js"),
+        Discord: typeof import("discord.js")
     ) {
         try {
             const subdomain = interaction.options.get("subdomain").value;
 
-            const res = (await axios.get("https://raw.is-a.dev/v2.json")).data;
+            const res = await getDomains();
             const data = res.find((entry: any) => entry.subdomain === subdomain);
 
             if (!data) {
@@ -61,7 +61,7 @@ const command: Command = {
                 urlRecord.setDescription(`${data.records.URL}`);
                 urlRecord.addFields({
                     name: "Redirect Paths",
-                    value: data?.redirect_config?.redirect_paths ? emoji.tick : emoji.cross,
+                    value: data?.redirect_config?.redirect_paths ? emoji.tick : emoji.cross
                 });
             }
 
@@ -70,7 +70,7 @@ const command: Command = {
                     name: "Custom Paths",
                     value: Object.entries(data.redirect_config.custom_paths)
                         .map(([path, url]) => `\`${path}\`: ${url}`)
-                        .join("\n"),
+                        .join("\n")
                 });
             }
 
@@ -84,15 +84,13 @@ const command: Command = {
 
         if (option.name === "subdomain") {
             // Fetch all subdomains
-            const res = (await axios.get("https://raw.is-a.dev/v2.json")).data;
+            const res = await getDomains(false, true, true);
 
             // Filter subdomains
             const filteredSubdomains = res.filter(
                 (entry: any) =>
                     entry.subdomain.startsWith(option.value) &&
-                    (entry.records.URL || entry.redirect_config?.custom_paths) &&
-                    !entry.reserved &&
-                    !entry.internal,
+                    (entry.records.URL || entry.redirect_config?.custom_paths)
             );
 
             // Map subdomains to choices
@@ -100,14 +98,14 @@ const command: Command = {
                 .map((entry: any) => {
                     return {
                         name: entry.subdomain,
-                        value: entry.subdomain,
+                        value: entry.subdomain
                     };
                 })
                 .slice(0, 25);
 
             await interaction.respond(choices);
         }
-    },
+    }
 };
 
 export = command;
