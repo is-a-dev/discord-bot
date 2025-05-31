@@ -21,7 +21,7 @@ const command: Command = {
         Discord: typeof import("discord.js")
     ) {
         try {
-            const res = await getDomains(false, true);
+            const res = await getDomains(client, { excludeFlags: ["internal"] });
             const data = res
                 .filter((entry: any) => entry.reserved)
                 .sort((a: any, b: any) => a.subdomain.localeCompare(b.subdomain));
@@ -38,11 +38,7 @@ const command: Command = {
             const result = new Discord.EmbedBuilder()
                 .setColor(client.config.embeds.default as ColorResolvable)
                 .setTitle("Reserved Subdomains")
-                .setDescription(
-                    data
-                        .map((d: any) => `\`${d.subdomain}\``)
-                        .join(", ")
-                )
+                .setDescription(data.map((d: any) => `\`${d.subdomain}\``).join(", "))
                 .setTimestamp();
 
             await interaction.editReply({ embeds: [result] });

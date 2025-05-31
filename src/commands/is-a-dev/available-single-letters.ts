@@ -23,7 +23,7 @@ const command: Command = {
         try {
             const subdomains = "abcdefghijklmnopqrstuvwxyz0123456789".split("");
 
-            const res = await getDomains();
+            const res = await getDomains(client);
 
             const taken = res.map((entry: any) => entry.subdomain);
             const available = subdomains.filter((subdomain) => !taken.includes(subdomain));

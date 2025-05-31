@@ -21,10 +21,7 @@ const command: Command = {
         Discord: typeof import("discord.js")
     ) {
         try {
-            const res = await getDomains(false, false, true);
-            const data = res
-                .filter((entry: any) => entry.owner.username === "is-a-dev")
-                .sort((a: any, b: any) => a.subdomain.localeCompare(b.subdomain));
+            const data = await getDomains(client, { excludeFlags: ["reserved"], username: "is-a-dev" });
 
             if (!data) {
                 const noResult = new Discord.EmbedBuilder()
@@ -39,9 +36,7 @@ const command: Command = {
                 .setColor(client.config.embeds.default as ColorResolvable)
                 .setTitle("Staff Domains")
                 .setDescription(
-                    data
-                        .map((d: any) => (d.internal ? `- \`${d.domain}\` :gear:` : `- \`${d.domain}\``))
-                        .join("\n")
+                    data.map((d: any) => (d.internal ? `- \`${d.domain}\` :gear:` : `- \`${d.domain}\``)).join("\n")
                 )
                 .setFooter({ text: "⚙️ Internal" })
                 .setTimestamp();

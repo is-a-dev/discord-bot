@@ -45,7 +45,9 @@ const command: Command = {
                 return;
             }
 
-            const data = (await axios.get(`https://raw.githubusercontent.com/is-a-dev/register/main/domains/${subdomain}.json`)).data;
+            const data = (
+                await axios.get(`https://raw.githubusercontent.com/is-a-dev/register/main/domains/${subdomain}.json`)
+            ).data;
 
             if (data.internal || data.reserved) {
                 const internalError = new Discord.EmbedBuilder()
@@ -83,20 +85,19 @@ const command: Command = {
 
         if (option.name === "subdomain") {
             // Fetch all subdomains
-            const res = await getDomains(false, true, true);
-
-            // Filter subdomains
-            const filteredSubdomains = res.filter((entry: any) => entry.subdomain.startsWith(option.value) && !entry.internal && !entry.reserved);
+            const data = await getDomains(client, {
+                excludeFlags: ["internal", "reserved"],
+                result_limit: 25,
+                subdomainStartsWith: option.value
+            });
 
             // Map subdomains to choices
-            const choices = filteredSubdomains
-                .map((entry: any) => {
-                    return {
-                        name: entry.subdomain,
-                        value: entry.subdomain
-                    };
-                })
-                .slice(0, 25);
+            const choices = data.map((entry: any) => {
+                return {
+                    name: entry.subdomain,
+                    value: entry.subdomain
+                };
+            });
 
             await interaction.respond(choices);
         }

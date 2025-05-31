@@ -21,11 +21,14 @@ const command: Command = {
         Discord: typeof import("discord.js")
     ) {
         try {
-            const res = await getDomains(true, true, true);
-            const data = res
-                .filter((entry: any) => entry.records.A || entry.records.AAAA || entry.records.CNAME)
-                .filter((entry: any) => !entry.subdomain.startsWith("_"))
-                .sort(() => Math.random() - 0.5);
+            const data = (
+                await getDomains(client, {
+                    excludeFlags: ["internal", "reserved"],
+                    excludeIAD: true,
+                    excludeUnderscores: true,
+                    hasRecords: ["A", "AAAA", "CNAME"]
+                })
+            ).sort(() => Math.random() - 0.5);
 
             const randomIndex = Math.floor(Math.random() * data.length);
             const randomWebsite = data[randomIndex];

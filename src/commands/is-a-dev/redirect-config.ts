@@ -30,10 +30,9 @@ const command: Command = {
         Discord: typeof import("discord.js")
     ) {
         try {
-            const subdomain = interaction.options.get("subdomain").value;
+            const subdomain = interaction.options.get("subdomain").value as string;
 
-            const res = await getDomains();
-            const data = res.find((entry: any) => entry.subdomain === subdomain);
+            const data = (await getDomains(client, { subdomain }))[0];
 
             if (!data) {
                 const noResult = new Discord.EmbedBuilder()
@@ -84,24 +83,24 @@ const command: Command = {
 
         if (option.name === "subdomain") {
             // Fetch all subdomains
-            const res = await getDomains(false, true, true);
+            const res = await getDomains(client, {
+                excludeFlags: ["internal", "reserved"],
+                result_limit: 25,
+                subdomainStartsWith: option.value
+            });
 
             // Filter subdomains
             const filteredSubdomains = res.filter(
-                (entry: any) =>
-                    entry.subdomain.startsWith(option.value) &&
-                    (entry.records.URL || entry.redirect_config?.custom_paths)
+                (entry: any) => entry.records.URL || entry.redirect_config?.custom_paths
             );
 
             // Map subdomains to choices
-            const choices = filteredSubdomains
-                .map((entry: any) => {
-                    return {
-                        name: entry.subdomain,
-                        value: entry.subdomain
-                    };
-                })
-                .slice(0, 25);
+            const choices = filteredSubdomains.map((entry: any) => {
+                return {
+                    name: entry.subdomain,
+                    value: entry.subdomain
+                };
+            });
 
             await interaction.respond(choices);
         }

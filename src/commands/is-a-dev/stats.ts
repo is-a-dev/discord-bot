@@ -3,7 +3,7 @@ import ExtendedClient from "../../classes/ExtendedClient";
 import { AutocompleteInteraction, ChatInputCommandInteraction, ColorResolvable } from "discord.js";
 
 import { emojis as emoji } from "../../../config.json";
-import { getDomains } from "../../util/functions";
+import { getDomains, getUsernames } from "../../util/functions";
 
 const command: Command = {
     name: "stats",
@@ -30,9 +30,7 @@ const command: Command = {
         try {
             const user = interaction.options.getString("user")?.toLowerCase();
 
-            const data = user
-                ? (await getDomains(true, true, true)).filter((domain) => domain.owner.username.toLowerCase() === user)
-                : await getDomains(true, true, true);
+            const data = await getDomains(client, { excludeFlags: ["internal", "reserved"], username: user || null });
 
             if (user && !data.some((entry: any) => entry.owner.username.toLowerCase() === user)) {
                 const noResult = new Discord.EmbedBuilder()
@@ -105,16 +103,14 @@ const command: Command = {
         const option = interaction.options.getFocused(true);
 
         if (option.name === "user") {
-            const res = (await getDomains()).map((entry: any) => entry.owner.username.toLowerCase());
+            const users = await getUsernames(client, { result_limit: 25 });
 
-            const uniqueUsers = Array.from(new Set(res)).sort();
-
-            const filteredUsers = uniqueUsers.filter((username) => username.startsWith(option.value.toLowerCase()));
+            const filteredUsers = users.filter((username) => username.startsWith(option.value.toLowerCase()));
 
             const choices = filteredUsers.map((username) => ({
                 name: username,
                 value: username
-            })).slice(0, 25);
+            }));
 
             await interaction.respond(choices);
         }

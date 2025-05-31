@@ -32,7 +32,7 @@ const command: Command = {
         try {
             const subdomain = interaction.options.get("subdomain").value as string;
 
-            const res = await getDomains();
+            const res = await getDomains(client);
             const data = res.find((entry: any) => entry.subdomain === subdomain);
 
             if (!data) {
@@ -108,7 +108,8 @@ const command: Command = {
                         case "TLSA":
                             records.push(
                                 `**${key}**: \`${data.records.TLSA.map(
-                                    (entry: any) => `${entry.usage} ${entry.selector} ${entry.matching_type} ${entry.data}`
+                                    (entry: any) =>
+                                        `${entry.usage} ${entry.selector} ${entry.matching_type} ${entry.data}`
                                 ).join("`, `")}\``
                             );
                             break;
@@ -203,20 +204,19 @@ const command: Command = {
 
         if (option.name === "subdomain") {
             // Fetch all subdomains
-            const res = await getDomains(true, true, true);
-
-            // Filter subdomains
-            const filteredSubdomains = res.filter((entry: any) => entry.subdomain.startsWith(option.value));
+            const res = await getDomains(client, {
+                excludeFlags: ["internal", "reserved"],
+                result_limit: 25,
+                subdomainStartsWith: option.value
+            });
 
             // Map subdomains to choices
-            const choices = filteredSubdomains
-                .map((entry: any) => {
-                    return {
-                        name: entry.subdomain,
-                        value: entry.subdomain
-                    };
-                })
-                .slice(0, 25);
+            const choices = res.map((entry: any) => {
+                return {
+                    name: entry.subdomain,
+                    value: entry.subdomain
+                };
+            });
 
             await interaction.respond(choices);
         }

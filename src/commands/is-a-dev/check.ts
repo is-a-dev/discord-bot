@@ -43,8 +43,7 @@ const command: Command = {
                 return;
             }
 
-            const res = await getDomains();
-            const data = res.find((entry: any) => entry.subdomain === subdomain);
+            const data = (await getDomains(client, { subdomain }))[0];
 
             if (!data) {
                 const available = new Discord.EmbedBuilder()

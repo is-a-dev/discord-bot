@@ -6,7 +6,7 @@ import { nodeProfilingIntegration } from "@sentry/profiling-node";
 Sentry.init({
     dsn: process.env.SENTRY_DSN,
     tracesSampleRate: 1.0,
-    integrations: [nodeProfilingIntegration()],
+    integrations: [nodeProfilingIntegration()]
 });
 
 import Discord from "discord.js";
@@ -19,17 +19,17 @@ const client = new ExtendedClient({
     intents: [
         Discord.GatewayIntentBits.Guilds,
         Discord.GatewayIntentBits.GuildMembers,
-        Discord.GatewayIntentBits.GuildMessages,
+        Discord.GatewayIntentBits.GuildMessages
     ],
     presence: {
         activities: [
             {
                 name: `🔧 v${bot.version}`,
-                type: Discord.ActivityType.Custom,
-            },
+                type: Discord.ActivityType.Custom
+            }
         ],
-        status: "online",
-    },
+        status: "online"
+    }
 });
 
 // Error Handling
@@ -97,5 +97,5 @@ client.validPermissions = [
     "UseSoundboard",
     "SendVoiceMessages",
     "SendPolls",
-    "UseExternalApps",
+    "UseExternalApps"
 ];
