@@ -1,13 +1,21 @@
 import Command from "../../classes/Command";
 import ExtendedClient from "../../classes/ExtendedClient";
-import { ChatInputCommandInteraction, ColorResolvable } from "discord.js";
+import { AutocompleteInteraction, ChatInputCommandInteraction, ColorResolvable } from "discord.js";
 
+import { emojis as emoji } from "../../../config.json";
 import { getDomains } from "../../util/functions";
 
 const command: Command = {
-    name: "statistics",
-    description: "Get a bunch of statistics about is-a.dev.",
-    options: [],
+    name: "stats",
+    description: "Get a statistics about is-a.dev or a user.",
+    options: [
+        {
+            name: "user",
+            description: "Get statistics for a specific user.",
+            type: 3,
+            autocomplete: true
+        }
+    ],
     botPermissions: [],
     requiredRoles: [],
     cooldown: 5,
@@ -20,12 +28,25 @@ const command: Command = {
         Discord: typeof import("discord.js")
     ) {
         try {
+            const user = interaction.options.getString("user");
+
             const data = await getDomains(true, true, true);
+
+            if (user && !data.some((entry: any) => entry.owner.username.toLowerCase() === user.toLowerCase())) {
+                const noResult = new Discord.EmbedBuilder()
+                    .setColor(client.config.embeds.error as ColorResolvable)
+                    .setDescription(`${emoji.cross} No data found for \`${user}\`.`);
+
+                await interaction.editReply({ embeds: [noResult] });
+                return;
+            }
 
             const statistics = new Discord.EmbedBuilder()
                 .setColor(client.config.embeds.default as ColorResolvable)
-                .setTitle("is-a.dev Statistics")
+                .setTitle(user? `${user}'s Statistics` : "is-a.dev Statistics")
                 .setTimestamp();
+            
+            if (user) statistics.setThumbnail(`https://github.com/${user}.png`);
 
             const mainStats = [];
             const recordStats: any = {};
@@ -33,7 +54,7 @@ const command: Command = {
             const owners = new Set(data.map((entry: any) => entry.owner.username.toLowerCase()));
 
             mainStats.push(`Subdomains: \`${data.length}\``);
-            mainStats.push(`Users: \`${owners.size}\``);
+            if (!user) mainStats.push(`Users: \`${owners.size}\``);
 
             let totalRecords = 0;
 
@@ -76,6 +97,26 @@ const command: Command = {
             await interaction.editReply({ embeds: [statistics] });
         } catch (err) {
             client.logCommandError(err, interaction, Discord);
+        }
+    },
+    autocomplete: async (interaction: AutocompleteInteraction, client: ExtendedClient) => {
+        const option = interaction.options.getFocused(true);
+
+        if (option.name === "user") {
+            const res = await getDomains();
+
+            const filteredUsers = res
+                .map((entry: any) => entry.owner.username.toLowerCase())
+                .filter((username) => username.startsWith(option.value))
+                .slice(0, 25);
+
+            // Map usernames to choices
+            const choices = filteredUsers.map((username) => ({
+                name: username,
+                value: username
+            }));
+
+            await interaction.respond(choices);
         }
     }
 };
