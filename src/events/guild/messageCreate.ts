@@ -60,7 +60,7 @@ const event: Event = {
                                 inline: true
                             }
                         )
-                        .setTimestamp(res.created_at);
+                        .setTimestamp(new Date(res.created_at));
 
                     await message.reply({ embeds: [prEmbed] });
                 } catch (err) {
