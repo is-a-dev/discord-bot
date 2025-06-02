@@ -6,8 +6,7 @@ import autocompleteHandler from "../../util/interaction/autocomplete";
 import commandHandler from "../../util/interaction/command";
 
 const event: GuildEvent = {
-    name: "InteractionCreate",
-    once: false,
+    name: "interactionCreate",
     async execute(client: ExtendedClient, Discord: typeof import("discord.js"), interaction: Interaction) {
         try {
             const requiredPerms: PermissionResolvable = ["SendMessages", "EmbedLinks"];

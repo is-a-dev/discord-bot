@@ -1,4 +1,4 @@
-import { ClientEvents, Events } from "discord.js";
+import { ClientEvents } from "discord.js";
 
 export class ClientEvent {
     public name: keyof ClientEvents;
@@ -7,7 +7,6 @@ export class ClientEvent {
 }
 
 export class GuildEvent {
-    public name: keyof typeof Events;
-    public once: boolean;
+    public name: string;
     public execute: Function;
 }

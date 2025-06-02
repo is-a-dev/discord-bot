@@ -7,8 +7,7 @@ import { emojis as emoji } from "../../../config.json";
 import { cap } from "../../util/functions";
 
 const event: GuildEvent = {
-    name: "MessageCreate",
-    once: false,
+    name: "messageCreate",
     async execute(client: ExtendedClient, Discord: typeof import("discord.js"), message: Message) {
         try {
             const requiredPerms: PermissionResolvable = ["SendMessages", "EmbedLinks"];
