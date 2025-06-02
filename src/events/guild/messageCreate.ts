@@ -13,36 +13,9 @@ const event: GuildEvent = {
         try {
             const requiredPerms: PermissionResolvable = ["SendMessages", "EmbedLinks"];
 
+            if (message.author.bot || !message.content) return;
             if (!message.guild || message.guild.id !== client.config.guild) return;
             if (!message.guild.members.me.permissions.has(requiredPerms)) return;
-
-            // Counting
-            if (message.channel.id === client.config.channels.counting) {
-                if (!message.content || !/^\d+$/.test(message.content) || message.author.bot) {
-                    await message.delete();
-                    return;
-                }
-
-                const countingChannel = message.guild.channels.cache.get(client.config.channels.counting);
-
-                if (!countingChannel || countingChannel.type !== Discord.ChannelType.GuildText) return;
-
-                const lastMessage = (await countingChannel.messages.fetch({ limit: 1 })).first();
-                const lastCount = parseInt(lastMessage?.content || "0", 10);
-
-                const currentCount = parseInt(message.content, 10);
-
-                if (
-                    isNaN(currentCount) ||
-                    currentCount !== lastCount + 1 ||
-                    lastMessage.author.id === message.author.id
-                ) {
-                    await message.delete();
-                    return;
-                }
-            }
-
-            if (message.author.bot || !message.content) return;
 
             // GitHub Pull Requests
             const prRegex = /##(\d{1,7})/;
