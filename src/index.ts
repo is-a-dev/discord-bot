@@ -46,8 +46,7 @@ if (!fs.existsSync("data")) {
 }
 
 client.db = new QuickDB({
-    filePath: "data/db.sqlite",
-    table: "is-a-dev-bot"
+    filePath: "data/db.sqlite"
 });
 
 // Global variable for config
