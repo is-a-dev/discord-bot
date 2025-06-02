@@ -1,4 +1,7 @@
 {
+    "channels": {
+        "counting": ""
+    },
     "embeds": {
         "default": "#7041FF",
         "error": "#E74C3C"

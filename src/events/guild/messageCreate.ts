@@ -11,18 +11,44 @@ const event: GuildEvent = {
     once: false,
     async execute(client: ExtendedClient, Discord: typeof import("discord.js"), message: Message) {
         try {
-            const requiredPerms: PermissionResolvable = ["SendMessages", "EmbedLinks", "AttachFiles"];
+            const requiredPerms: PermissionResolvable = ["SendMessages", "EmbedLinks"];
 
-            if (message.author.bot || !message.guild || message.guild.id !== client.config.guild) return;
+            if (!message.guild || message.guild.id !== client.config.guild) return;
             if (!message.guild.members.me.permissions.has(requiredPerms)) return;
 
-            // GitHub Pull Requests
-            if (message.content.startsWith("##")) {
-                const prUrl = message.content.split(" ")[0].slice(2);
-                const prId = prUrl.split("/").pop();
+            // Counting
+            if (message.channel.id === client.config.channels.counting) {
+                if (!message.content || !/^\d+$/.test(message.content) || message.author.bot) {
+                    await message.delete();
+                    return;
+                }
 
-                if (!prId || !/^\d+$/.test(prId)) return;
-                if (prId.length > 7) return;
+                const countingChannel = message.guild.channels.cache.get(client.config.channels.counting);
+
+                if (!countingChannel || countingChannel.type !== Discord.ChannelType.GuildText) return;
+
+                const lastMessage = (await countingChannel.messages.fetch({ limit: 1 })).first();
+                const lastCount = parseInt(lastMessage?.content || "0", 10);
+
+                const currentCount = parseInt(message.content, 10);
+
+                if (
+                    isNaN(currentCount) ||
+                    currentCount !== lastCount + 1 ||
+                    lastMessage.author.id === message.author.id
+                ) {
+                    await message.delete();
+                    return;
+                }
+            }
+
+            if (message.author.bot || !message.content) return;
+
+            // GitHub Pull Requests
+            const prRegex = /##(\d{1,7})/;
+
+            if (prRegex.test(message.content)) {
+                const prId = message.content.match(prRegex)?.[1];
 
                 try {
                     const res = (await axios.get(`https://api.github.com/repos/is-a-dev/register/pulls/${prId}`)).data;
