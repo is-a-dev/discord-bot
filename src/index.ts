@@ -33,8 +33,22 @@ const client = new ExtendedClient({
     }
 });
 
+import fs from "fs";
+
 // Error Handling
 process.on("unhandledRejection", (err: Error) => Sentry.captureException(err));
+
+// Quick.db Database
+import { QuickDB } from "quick.db";
+
+if (!fs.existsSync("data")) {
+    fs.mkdirSync("data");
+}
+
+client.db = new QuickDB({
+    filePath: "data/db.sqlite",
+    table: "is-a-dev-bot"
+});
 
 // Global variable for config
 client.config = config;

@@ -130,4 +130,5 @@ dist
 .pnp.*
 
 # Other
+data/
 config.json

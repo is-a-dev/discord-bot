@@ -14,6 +14,9 @@
     },
     "guild": "",
     "roles": {
+        "boost_role_above": "",
+        "boost_role_below": "",
+        "booster": "",
         "bots": "",
         "maintainer": "",
         "member": "",
