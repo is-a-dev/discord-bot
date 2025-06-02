@@ -1,4 +1,4 @@
-import Event from "../../classes/Event";
+import { GuildEvent } from "../../classes/Event";
 import ExtendedClient from "../../classes/ExtendedClient";
 import { ColorResolvable, Message, PermissionResolvable } from "discord.js";
 
@@ -6,8 +6,8 @@ import axios from "axios";
 import { emojis as emoji } from "../../../config.json";
 import { cap } from "../../util/functions";
 
-const event: Event = {
-    name: "messageCreate",
+const event: GuildEvent = {
+    name: "MessageCreate",
     once: false,
     async execute(client: ExtendedClient, Discord: typeof import("discord.js"), message: Message) {
         try {

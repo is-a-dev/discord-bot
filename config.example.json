@@ -14,7 +14,9 @@
     },
     "guild": "",
     "roles": {
+        "bots": "",
         "maintainer": "",
+        "member": "",
         "owner": ""
     }
 }
