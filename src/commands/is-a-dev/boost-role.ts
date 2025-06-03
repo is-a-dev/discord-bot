@@ -127,7 +127,6 @@ const command: Command = {
                     }
                 }
 
-                // Validate color
                 if (!colorRegex.test(color as string)) {
                     const error = new Discord.EmbedBuilder()
                         .setColor(client.config.embeds.error as ColorResolvable)
@@ -142,7 +141,6 @@ const command: Command = {
                     Math.random() * (brAbove.position - brBelow.position - 1) + brBelow.position + 1
                 );
 
-                // Create the role
                 const role = await interaction.guild.roles.create({
                     name,
                     color,
