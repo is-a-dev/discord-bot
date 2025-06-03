@@ -108,7 +108,7 @@ const command: Command = {
             const colorRegex = /^#([0-9A-F]{6}|[0-9A-F]{3})$/i;
 
             if (subcommand === "create") {
-                const name = interaction.options.get("name")?.value as string || `${interaction.user.globalName}'s boost role`;
+                const name = interaction.options.get("name")?.value as string || interaction.user.username;
                 const color = interaction.options.get("color").value as ColorResolvable;
                 const icon = interaction.options.getAttachment("icon");
 
