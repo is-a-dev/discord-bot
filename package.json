@@ -20,8 +20,8 @@
   "dependencies": {
     "@octokit/auth-oauth-device": "8.0.1",
     "@octokit/core": "7.0.2",
-    "@sentry/node": "9.24.0",
-    "@sentry/profiling-node": "9.24.0",
+    "@sentry/node": "9.25.0",
+    "@sentry/profiling-node": "9.25.0",
     "axios": "1.9.0",
     "better-sqlite3": "11.10.0",
     "discord.js": "14.19.3",
