@@ -1,5 +1,5 @@
-import { GuildEvent } from "../../classes/Event";
-import ExtendedClient from "../../classes/ExtendedClient";
+import { GuildEvent } from "../classes/Event";
+import ExtendedClient from "../classes/ExtendedClient";
 import { GuildMember, PermissionResolvable } from "discord.js";
 
 const event: GuildEvent = {

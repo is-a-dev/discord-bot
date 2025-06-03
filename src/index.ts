@@ -13,8 +13,6 @@ import Discord from "discord.js";
 import ExtendedClient from "./classes/ExtendedClient";
 import config from "../config.json";
 
-const bot = require("../package.json");
-
 const client = new ExtendedClient({
     intents: [
         Discord.GatewayIntentBits.Guilds,
@@ -25,8 +23,8 @@ const client = new ExtendedClient({
     presence: {
         activities: [
             {
-                name: `🔧 v${bot.version}`,
-                type: Discord.ActivityType.Custom
+                name: "over is-a.dev",
+                type: Discord.ActivityType.Watching
             }
         ],
         status: "online"
@@ -61,55 +59,3 @@ loadHandlers(client);
 
 // Login
 client.login(process.env.TOKEN);
-
-// Constants
-client.commandIds = new Discord.Collection();
-
-client.validPermissions = [
-    "CreateInstantInvite",
-    "KickMembers",
-    "BanMembers",
-    "Administrator",
-    "ManageChannels",
-    "ManageGuild",
-    "AddReactions",
-    "ViewAuditLog",
-    "PrioritySpeaker",
-    "Stream",
-    "ViewChannel",
-    "SendMessages",
-    "SendTTSMessages",
-    "ManageMessages",
-    "EmbedLinks",
-    "AttachFiles",
-    "ReadMessageHistory",
-    "MentionEveryone",
-    "UseExternalEmojis",
-    "ViewGuildInsights",
-    "Connect",
-    "Speak",
-    "MuteMembers",
-    "DeafenMembers",
-    "MoveMembers",
-    "UseVAD",
-    "ChangeNickname",
-    "ManageNicknames",
-    "ManageRoles",
-    "ManageWebhooks",
-    "ManageEmojisAndStickers",
-    "UseApplicationCommands",
-    "RequestToSpeak",
-    "ManageEvents",
-    "ManageThreads",
-    "CreatePublicThreads",
-    "CreatePrivateThreads",
-    "UseExternalStickers",
-    "SendMessagesInThreads",
-    "UseEmbeddedActivities",
-    "ModerateMembers",
-    "ViewCreatorMonetizationAnalytics",
-    "UseSoundboard",
-    "SendVoiceMessages",
-    "SendPolls",
-    "UseExternalApps"
-];

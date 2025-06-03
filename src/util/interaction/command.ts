@@ -49,13 +49,11 @@ export = async (client: ExtendedClient, Discord: typeof import("discord.js"), in
             }
         }
 
-        const validPermissions = client.validPermissions;
-
         if (command.botPermissions.length) {
             const invalidPerms = [];
 
             for (const perm of command.botPermissions as any) {
-                if (!validPermissions.includes(perm)) return;
+                if (!client.validPermissions.includes(perm)) return;
 
                 if (!interaction.guild?.members.me?.permissions.has(perm)) invalidPerms.push(perm);
             }
