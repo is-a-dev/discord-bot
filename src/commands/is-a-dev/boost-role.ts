@@ -18,22 +18,20 @@ const command: Command = {
                     name: "name",
                     description: "The name of the boost role.",
                     min_length: 3,
-                    max_length: 32,
-                    required: true
+                    max_length: 32
                 },
                 {
                     type: 3,
                     name: "color",
                     description: "The color of the boost role. Use hex format (e.g. #0096FF)",
-                    min_length: 7,
+                    min_length: 4,
                     max_length: 7,
                     required: true
                 },
                 {
                     type: 11,
                     name: "icon",
-                    description: "The role icon to use for the boost role.",
-                    required: false
+                    description: "The role icon to use for the boost role."
                 }
             ]
         },
@@ -47,22 +45,19 @@ const command: Command = {
                     name: "name",
                     description: "The new name of the boost role.",
                     min_length: 3,
-                    max_length: 32,
-                    required: false
+                    max_length: 32
                 },
                 {
                     type: 3,
                     name: "color",
                     description: "The new color of the boost role. Use hex format (e.g. #0096FF)",
-                    min_length: 7,
-                    max_length: 7,
-                    required: false
+                    min_length: 4,
+                    max_length: 7
                 },
                 {
                     type: 11,
                     name: "icon",
-                    description: "The new role icon to use for the boost role.",
-                    required: false
+                    description: "The new role icon to use for the boost role."
                 }
             ]
         },
@@ -113,7 +108,7 @@ const command: Command = {
             const colorRegex = /^#([0-9A-F]{6}|[0-9A-F]{3})$/i;
 
             if (subcommand === "create") {
-                const name = interaction.options.get("name").value as string;
+                const name = interaction.options.get("name")?.value as string || `${interaction.user.globalName}'s boost role`;
                 const color = interaction.options.get("color").value as ColorResolvable;
                 const icon = interaction.options.getAttachment("icon");
 
