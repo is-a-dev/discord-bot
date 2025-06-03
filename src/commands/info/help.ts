@@ -18,7 +18,7 @@ const command: Command = {
         }
     ],
     botPermissions: [],
-    requiredRoles: [],
+    permittedRoles: [],
     cooldown: 5,
     enabled: true,
     deferReply: true,

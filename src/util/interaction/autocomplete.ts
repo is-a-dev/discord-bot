@@ -12,10 +12,10 @@ export = async (client: ExtendedClient, interaction: AutocompleteInteraction) =>
 
         const member = await interaction?.guild.members.fetch(interaction.user.id);
 
-        if (command.requiredRoles.length && !member?.roles.cache.has(client.config.roles.owner)) {
+        if (command.permittedRoles.length && !member?.roles.cache.has(client.config.roles.owner)) {
             let permitted = false;
 
-            for (const role of command.requiredRoles) {
+            for (const role of command.permittedRoles) {
                 const roleId = client.config.roles[role];
                 if (!roleId) continue;
 

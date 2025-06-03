@@ -10,7 +10,7 @@ const command: Command = {
     description: "Visit a random is-a.dev website.",
     options: [],
     botPermissions: [],
-    requiredRoles: [],
+    permittedRoles: [],
     cooldown: 5,
     enabled: true,
     deferReply: true,

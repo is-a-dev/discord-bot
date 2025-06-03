@@ -10,7 +10,7 @@ const command: Command = {
     description: "Get the last time the is-a.dev zone was updated.",
     options: [],
     botPermissions: [],
-    requiredRoles: [],
+    permittedRoles: [],
     cooldown: 5,
     enabled: true,
     deferReply: true,

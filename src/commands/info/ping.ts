@@ -9,7 +9,7 @@ const command: Command = {
     description: "Check the bot's latency.",
     options: [],
     botPermissions: [],
-    requiredRoles: [],
+    permittedRoles: [],
     cooldown: 10,
     enabled: true,
     deferReply: false,

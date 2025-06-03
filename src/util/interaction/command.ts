@@ -24,10 +24,10 @@ export = async (client: ExtendedClient, Discord: typeof import("discord.js"), in
 
         const member = await interaction?.guild.members.fetch(interaction.user.id);
 
-        if (command.requiredRoles.length && !member?.roles.cache.has(client.config.roles.owner as string)) {
+        if (command.permittedRoles.length && !member?.roles.cache.has(client.config.roles.owner as string)) {
             let permitted = false;
 
-            for (const role of command.requiredRoles) {
+            for (const role of command.permittedRoles) {
                 const roleId = client.config.roles[role];
                 if (!roleId) continue;
 
@@ -41,7 +41,7 @@ export = async (client: ExtendedClient, Discord: typeof import("discord.js"), in
                 const noPerms = new Discord.EmbedBuilder()
                     .setColor(client.config.embeds.error as ColorResolvable)
                     .setDescription(
-                        `${emoji.cross} You must have one of the following roles to use this command: <@&${command.requiredRoles.map((role) => client.config.roles[role]).join(">, <@&")}>`
+                        `${emoji.cross} You must have one of the following roles to use this command: <@&${command.permittedRoles.map((role) => client.config.roles[role]).join(">, <@&")}>`
                     );
 
                 await interaction.reply({ embeds: [noPerms], flags: MessageFlags.Ephemeral });

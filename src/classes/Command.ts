@@ -12,7 +12,7 @@ export default class Command {
     public options: ApplicationCommandOptionData[];
     public default_member_permissions?: Permissions | null;
     public botPermissions: PermissionResolvable[];
-    public requiredRoles: Role[];
+    public permittedRoles: Role[];
     public cooldown: number;
     public enabled: boolean;
     public deferReply: boolean;

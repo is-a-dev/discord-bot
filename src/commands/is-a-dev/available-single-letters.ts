@@ -10,7 +10,7 @@ const command: Command = {
     description: "Check if there are any available single letter subdomains.",
     options: [],
     botPermissions: [],
-    requiredRoles: [],
+    permittedRoles: [],
     cooldown: 5,
     enabled: true,
     deferReply: true,

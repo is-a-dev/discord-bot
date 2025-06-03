@@ -73,7 +73,7 @@ const command: Command = {
         }
     ],
     botPermissions: ["ManageRoles"],
-    requiredRoles: [],
+    permittedRoles: ["boost_role_bypass", "booster", "donator"],
     cooldown: 5,
     enabled: true,
     deferReply: true,
@@ -109,20 +109,6 @@ const command: Command = {
 
             const member = interaction.guild.members.cache.get(interaction.user.id);
             const currentBoostRole = await client.db.get(`boost_roles.${interaction.user.id}`);
-
-            if (!member.roles.cache.has(client.config.roles.booster)) {
-                const noBooster = new Discord.EmbedBuilder()
-                    .setColor(client.config.embeds.error as ColorResolvable)
-                    .setDescription(`${emoji.cross} You are not a server booster.`);
-
-                await interaction.editReply({ embeds: [noBooster] });
-
-                if (currentBoostRole) {
-                    await client.db.delete(`boost_roles.${interaction.user.id}`);
-                }
-
-                return;
-            }
 
             const colorRegex = /^#([0-9A-F]{6}|[0-9A-F]{3})$/i;
 

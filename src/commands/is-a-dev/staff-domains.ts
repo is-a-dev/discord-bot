@@ -10,7 +10,7 @@ const command: Command = {
     description: "Get a list of all the staff domains.",
     options: [],
     botPermissions: [],
-    requiredRoles: ["maintainer"],
+    permittedRoles: ["maintainer"],
     cooldown: 5,
     enabled: true,
     deferReply: true,

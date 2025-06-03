@@ -9,7 +9,7 @@ const command: Command = {
     description: "Different information about the bot.",
     options: [],
     botPermissions: [],
-    requiredRoles: [],
+    permittedRoles: [],
     cooldown: 5,
     enabled: true,
     deferReply: true,
