@@ -1,7 +1,7 @@
-import { ClientEvent } from "../../classes/Event";
-import ExtendedClient from "../../classes/ExtendedClient";
+import { ClientEvent } from "../classes/Event";
+import ExtendedClient from "../classes/ExtendedClient";
 
-import registerCommands from "../../scripts/register";
+import registerCommands from "../scripts/register";
 
 const event: ClientEvent = {
     name: "ready",

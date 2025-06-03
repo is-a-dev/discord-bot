@@ -1,9 +1,9 @@
-import { GuildEvent } from "../../classes/Event";
-import ExtendedClient from "../../classes/ExtendedClient";
+import { GuildEvent } from "../classes/Event";
+import ExtendedClient from "../classes/ExtendedClient";
 import { Interaction, PermissionResolvable } from "discord.js";
 
-import autocompleteHandler from "../../util/interaction/autocomplete";
-import commandHandler from "../../util/interaction/command";
+import autocompleteHandler from "../util/interaction/autocomplete";
+import commandHandler from "../util/interaction/command";
 
 const event: GuildEvent = {
     name: "interactionCreate",

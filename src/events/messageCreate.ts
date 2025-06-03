@@ -1,10 +1,10 @@
-import { GuildEvent } from "../../classes/Event";
-import ExtendedClient from "../../classes/ExtendedClient";
+import { GuildEvent } from "../classes/Event";
+import ExtendedClient from "../classes/ExtendedClient";
 import { ColorResolvable, Message, PermissionResolvable } from "discord.js";
 
 import axios from "axios";
-import { emojis as emoji } from "../../../config.json";
-import { cap } from "../../util/functions";
+import { emojis as emoji } from "../../config.json";
+import { cap } from "../util/functions";
 
 const event: GuildEvent = {
     name: "messageCreate",
