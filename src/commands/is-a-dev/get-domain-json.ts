@@ -84,15 +84,13 @@ const command: Command = {
         const option = interaction.options.getFocused(true);
 
         if (option.name === "subdomain") {
-            // Fetch all subdomains
-            const data = await getDomains(client, {
-                excludeFlags: ["internal", "reserved"],
-                resultLimit: 25,
-                subdomainStartsWith: option.value
-            });
-
-            // Map subdomains to choices
-            const choices = data.map((entry: any) => {
+            const choices = (
+                await getDomains(client, {
+                    excludeFlags: ["internal", "reserved"],
+                    resultLimit: 25,
+                    subdomainIncludes: option.value
+                })
+            ).map((entry: any) => {
                 return {
                     name: entry.subdomain,
                     value: entry.subdomain

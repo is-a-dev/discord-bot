@@ -83,24 +83,20 @@ const command: Command = {
 
         if (option.name === "subdomain") {
             // Fetch all subdomains
-            const res = await getDomains(client, {
-                excludeFlags: ["internal", "reserved"],
-                resultLimit: 25,
-                subdomainStartsWith: option.value
-            });
-
-            // Filter subdomains
-            const filteredSubdomains = res.filter(
-                (entry: any) => entry.records.URL || entry.redirect_config?.custom_paths
-            );
-
-            // Map subdomains to choices
-            const choices = filteredSubdomains.map((entry: any) => {
-                return {
-                    name: entry.subdomain,
-                    value: entry.subdomain
-                };
-            });
+            const choices = (
+                await getDomains(client, {
+                    excludeFlags: ["internal", "reserved"],
+                    subdomainIncludes: option.value
+                })
+            )
+                .filter((entry: any) => entry.records.URL || entry.redirect_config?.custom_paths)
+                .slice(0, 25)
+                .map((entry: any) => {
+                    return {
+                        name: entry.subdomain,
+                        value: entry.subdomain
+                    };
+                });
 
             await interaction.respond(choices);
         }

@@ -103,14 +103,12 @@ const command: Command = {
         const option = interaction.options.getFocused(true);
 
         if (option.name === "user") {
-            const users = await getUsernames(client, { resultLimit: 25 });
-
-            const filteredUsers = users.filter((username) => username.startsWith(option.value.toLowerCase()));
-
-            const choices = filteredUsers.map((username) => ({
-                name: username,
-                value: username
-            }));
+            const choices = (await getUsernames(client, { usernameIncludes: option.value, resultLimit: 25 })).map(
+                (username) => ({
+                    name: username,
+                    value: username
+                })
+            );
 
             await interaction.respond(choices);
         }

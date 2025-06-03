@@ -40,7 +40,7 @@ export async function getDomains(
         hasRecords?: ("A" | "AAAA" | "CAA" | "CNAME" | "DS" | "MX" | "NS" | "SRV" | "TLSA" | "TXT" | "URL")[];
         resultLimit?: number;
         subdomain?: string | null;
-        subdomainStartsWith?: string;
+        subdomainIncludes?: string;
         username?: string | null;
     } = {
         excludeIAD: false,
@@ -50,7 +50,7 @@ export async function getDomains(
         hasRecords: [],
         resultLimit: 0,
         subdomain: null,
-        subdomainStartsWith: "",
+        subdomainIncludes: "",
         username: null
     }
 ): Promise<Domain[]> {
@@ -62,7 +62,7 @@ export async function getDomains(
         hasRecords,
         resultLimit,
         subdomain,
-        subdomainStartsWith,
+        subdomainIncludes,
         username
     } = options;
 
@@ -92,8 +92,7 @@ export async function getDomains(
         if (hasFlags?.length > 0 && !hasFlags?.every((flag) => entry[flag])) return false;
         if (hasRecords?.length > 0 && !hasRecords?.some((record) => entry.records[record])) return false;
         if (subdomain && entry.subdomain.toLowerCase() !== subdomain.toLowerCase()) return false;
-        if (subdomainStartsWith && !entry.subdomain.toLowerCase().startsWith(subdomainStartsWith.toLowerCase()))
-            return false;
+        if (subdomainIncludes && !entry.subdomain.toLowerCase().includes(subdomainIncludes.toLowerCase())) return false;
         if (username && entry.owner.username.toLowerCase() !== username.toLowerCase()) return false;
         return true;
     });
@@ -103,9 +102,9 @@ export async function getDomains(
 
 export async function getUsernames(
     client: ExtendedClient,
-    options: { resultLimit: number } = { resultLimit: 0 }
+    options: { usernameIncludes: string; resultLimit: number } = { usernameIncludes: "", resultLimit: 0 }
 ): Promise<string[]> {
-    const { resultLimit } = options;
+    const { usernameIncludes, resultLimit } = options;
 
     if (
         !client.rawAPICache ||
@@ -119,9 +118,12 @@ export async function getUsernames(
         }
     }
 
-    const results = Array.from(
-        new Set(client.rawAPICache.map((entry: Domain) => entry.owner.username.toLowerCase()))
-    ).sort();
+    const results = Array.from(new Set(client.rawAPICache.map((entry: Domain) => entry.owner.username.toLowerCase())))
+        .sort()
+        .filter((username) => {
+            if (usernameIncludes && !username.includes(usernameIncludes.toLowerCase())) return false;
+            return true;
+        });
 
     return resultLimit <= 0 ? results : results.slice(0, resultLimit);
 }
