@@ -17,26 +17,39 @@ const event: GuildEvent = {
             if (!message.guild.members.me.permissions.has(requiredPerms)) return;
 
             // GitHub Pull Requests
-            const prRegex = /##(\d{1,7})/;
+            const prIds = message.content.match(/##(\d{1,7})/g)?.slice(0, 10) || [];
 
-            if (prRegex.test(message.content)) {
-                const prId = message.content.match(prRegex)?.[1];
+            if (prIds.length > 0) {
+                const data = [];
 
-                try {
-                    const res = (await axios.get(`https://api.github.com/repos/is-a-dev/register/pulls/${prId}`)).data;
+                for (const prId of prIds) {
+                    const id = prId.replace(/##/g, "");
 
-                    const color = {
-                        open: "#2cbe4e" as ColorResolvable,
-                        closed: "#cb2431" as ColorResolvable,
-                        merged: "#6f42c1" as ColorResolvable
-                    };
+                    try {
+                        const res = (await axios.get(`https://api.github.com/repos/is-a-dev/register/pulls/${id}`)).data;
+                        data.push(res);
+                    } catch {
+                        continue;
+                    }
+                }
 
-                    const stateEmojis = {
-                        open: emoji.pr_open,
-                        closed: emoji.pr_closed,
-                        merged: emoji.pr_merged
-                    };
+                if (data.length === 0) return;
 
+                const color = {
+                    open: "#2cbe4e" as ColorResolvable,
+                    closed: "#cb2431" as ColorResolvable,
+                    merged: "#6f42c1" as ColorResolvable
+                };
+
+                const stateEmojis = {
+                    open: emoji.pr_open,
+                    closed: emoji.pr_closed,
+                    merged: emoji.pr_merged
+                };
+
+                const embeds = [];
+
+                for (const res of data) {
                     const state = res.state === "open" ? "open" : res.merged_at ? "merged" : "closed";
 
                     const prEmbed = new Discord.EmbedBuilder()
@@ -44,41 +57,25 @@ const event: GuildEvent = {
                         .setAuthor({ name: res.user.login, iconURL: res.user.avatar_url, url: res.user.html_url })
                         .setTitle(cap(res.title, 100))
                         .setURL(res.html_url)
-                        .addFields(
-                            {
-                                name: "Status",
-                                value: `${stateEmojis[state]} ${state.charAt(0).toUpperCase() + state.slice(1)}`,
-                                inline: true
-                            },
-                            {
-                                name: "Labels",
-                                value: res.labels.length
-                                    ? `\`${res.labels.map((l: { name: string }) => l.name).join("`, `")}\``
-                                    : "*N/A*",
-                                inline: true
-                            }
-                        )
+                        .addFields({
+                            name: "Status",
+                            value: `${stateEmojis[state]} ${state.charAt(0).toUpperCase() + state.slice(1)}`,
+                            inline: true
+                        })
                         .setTimestamp(new Date(res.created_at));
 
-                    await message.reply({ embeds: [prEmbed] });
-                } catch (err) {
-                    if (axios.isAxiosError(err) && err.response?.status === 404) {
-                        const notFound = new Discord.EmbedBuilder()
-                            .setColor(client.config.embeds.error as ColorResolvable)
-                            .setDescription(`${emoji.cross} Pull request not found.`);
-
-                        await message.reply({ embeds: [notFound] });
-                        return;
+                    if (res.labels.length > 0) {
+                        prEmbed.addFields({
+                            name: "Labels",
+                            value: `\`${res.labels.map((l: { name: string }) => l.name).join("`, `")}\``,
+                            inline: true
+                        });
                     }
 
-                    client.logError(err);
-
-                    const error = new Discord.EmbedBuilder()
-                        .setColor(client.config.embeds.error as ColorResolvable)
-                        .setDescription(`${emoji.cross} An error occurred while fetching the pull request.`);
-
-                    await message.reply({ embeds: [error] });
+                    embeds.push(prEmbed);
                 }
+
+                await message.reply({ embeds });
             }
         } catch (err) {
             client.logError(err);
