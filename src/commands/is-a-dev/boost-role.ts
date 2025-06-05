@@ -137,9 +137,8 @@ const command: Command = {
                 }
 
                 // Random position between brBelow and brAbove
-                const position = Math.floor(
-                    Math.random() * (brAbove.position - brBelow.position - 1) + brBelow.position + 1
-                );
+                // All boost roles should be above brAbove and below brBelow
+                const position = Math.floor(Math.random() * (brBelow.position - brAbove.position - 1)) + brAbove.position + 1;
 
                 const role = await interaction.guild.roles.create({
                     name,
