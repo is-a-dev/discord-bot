@@ -41,7 +41,11 @@ export = async (client: ExtendedClient, Discord: typeof import("discord.js"), in
                 const noPerms = new Discord.EmbedBuilder()
                     .setColor(client.config.embeds.error as ColorResolvable)
                     .setDescription(
-                        `${emoji.cross} You must have one of the following roles to use this command: <@&${command.permittedRoles.map((role) => client.config.roles[role]).join(">, <@&")}>`
+                        `${
+                            emoji.cross
+                        } You must have one of the following roles to use this command: <@&${command.permittedRoles
+                            .map((role) => client.config.roles[role])
+                            .join(">, <@&")}>`
                     );
 
                 await interaction.reply({ embeds: [noPerms], flags: MessageFlags.Ephemeral });
@@ -68,11 +72,11 @@ export = async (client: ExtendedClient, Discord: typeof import("discord.js"), in
             }
         }
 
-        command.deferReply
-            ? command.ephemeral
+        if (command.deferReply) {
+            command.ephemeral
                 ? await interaction.deferReply({ flags: MessageFlags.Ephemeral })
-                : await interaction.deferReply()
-            : null;
+                : await interaction.deferReply();
+        }
 
         if (
             member?.roles.cache.has(client.config.roles.owner) ||
@@ -80,7 +84,11 @@ export = async (client: ExtendedClient, Discord: typeof import("discord.js"), in
         ) {
             // Log interaction to console
             console.log(
-                `[interactionCreate] [command] ${interaction.user.tag} (${interaction.user.id}): /${interaction.commandName} ${interaction.options.data.map((option: any) => (option.value ? `${option.name}:${option.value}` : option.name)).join(" ")}`
+                `[interactionCreate] [command] ${interaction.user.tag} (${interaction.user.id}): /${
+                    interaction.commandName
+                } ${interaction.options.data
+                    .map((option: any) => (option.value ? `${option.name}:${option.value}` : option.name))
+                    .join(" ")}`
             );
 
             try {
@@ -115,7 +123,9 @@ export = async (client: ExtendedClient, Discord: typeof import("discord.js"), in
                 const cooldown = new Discord.EmbedBuilder()
                     .setColor(client.config.embeds.error as ColorResolvable)
                     .setDescription(
-                        `⏰ Please wait ${timeLeft} second${timeLeft === "1" ? "" : "s"} before running that command again!`
+                        `⏰ Please wait ${timeLeft} second${
+                            timeLeft === "1" ? "" : "s"
+                        } before running that command again!`
                     );
 
                 command.deferReply
@@ -134,7 +144,11 @@ export = async (client: ExtendedClient, Discord: typeof import("discord.js"), in
         try {
             // Log interaction to console
             console.log(
-                `[interactionCreate] [command] ${interaction.user.tag} (${interaction.user.id}): /${interaction.commandName} ${interaction.options.data.map((option: any) => (option.value ? `${option.name}:${option.value}` : option.name)).join(" ")}`
+                `[interactionCreate] [command] ${interaction.user.tag} (${interaction.user.id}): /${
+                    interaction.commandName
+                } ${interaction.options.data
+                    .map((option: any) => (option.value ? `${option.name}:${option.value}` : option.name))
+                    .join(" ")}`
             );
 
             await command.execute(interaction, client, Discord);

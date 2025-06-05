@@ -18,17 +18,12 @@ const command: Command = {
             autocomplete: true
         }
     ],
-    botPermissions: [],
-    permittedRoles: [],
     cooldown: 5,
-    enabled: true,
-    deferReply: true,
-    ephemeral: false,
-    async execute(
+    execute: async (
         interaction: ChatInputCommandInteraction,
         client: ExtendedClient,
         Discord: typeof import("discord.js")
-    ) {
+    ) => {
         try {
             const subdomain = (interaction.options.get("subdomain").value as string).toLowerCase();
 
@@ -79,26 +74,29 @@ const command: Command = {
         }
     },
     autocomplete: async (interaction: AutocompleteInteraction, client: ExtendedClient) => {
-        const option = interaction.options.getFocused(true);
+        try {
+            const option = interaction.options.getFocused(true);
 
-        if (option.name === "subdomain") {
-            // Fetch all subdomains
-            const choices = (
-                await getDomains(client, {
-                    excludeFlags: ["internal", "reserved"],
-                    subdomainIncludes: option.value
-                })
-            )
-                .filter((entry: any) => entry.records.URL || entry.redirect_config?.custom_paths)
-                .slice(0, 25)
-                .map((entry: any) => {
-                    return {
-                        name: entry.subdomain,
-                        value: entry.subdomain
-                    };
-                });
+            if (option.name === "subdomain") {
+                const choices = (
+                    await getDomains(client, {
+                        excludeFlags: ["internal", "reserved"],
+                        subdomainIncludes: option.value
+                    })
+                )
+                    .filter((entry: any) => entry.records.URL || entry.redirect_config?.custom_paths)
+                    .slice(0, 25)
+                    .map((entry: any) => {
+                        return {
+                            name: entry.subdomain,
+                            value: entry.subdomain
+                        };
+                    });
 
-            await interaction.respond(choices);
+                await interaction.respond(choices);
+            }
+        } catch (err) {
+            client.logError(err);
         }
     }
 };

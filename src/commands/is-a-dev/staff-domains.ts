@@ -8,18 +8,14 @@ import { getDomains } from "../../util/functions";
 const command: Command = {
     name: "staff-domains",
     description: "Get a list of all the staff domains.",
-    options: [],
-    botPermissions: [],
     permittedRoles: ["maintainer"],
     cooldown: 5,
-    enabled: true,
-    deferReply: true,
     ephemeral: true,
-    async execute(
+    execute: async (
         interaction: ChatInputCommandInteraction,
         client: ExtendedClient,
         Discord: typeof import("discord.js")
-    ) {
+    ) => {
         try {
             const data = await getDomains(client, { excludeFlags: ["reserved"], username: "is-a-dev" });
 

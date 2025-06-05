@@ -17,17 +17,12 @@ const command: Command = {
             required: true
         }
     ],
-    botPermissions: [],
-    permittedRoles: [],
     cooldown: 5,
-    enabled: true,
-    deferReply: true,
-    ephemeral: false,
-    async execute(
+    execute: async (
         interaction: ChatInputCommandInteraction,
         client: ExtendedClient,
         Discord: typeof import("discord.js")
-    ) {
+    ) => {
         try {
             const subdomain = (interaction.options.get("subdomain").value as string).toLowerCase();
 

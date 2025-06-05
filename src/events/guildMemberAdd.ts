@@ -4,7 +4,7 @@ import { GuildMember, PermissionResolvable } from "discord.js";
 
 const event: GuildEvent = {
     name: "guildMemberAdd",
-    async execute(client: ExtendedClient, Discord: typeof import("discord.js"), member: GuildMember) {
+    execute: async (client: ExtendedClient, Discord: typeof import("discord.js"), member: GuildMember) =>{
         try {
             const requiredPerms: PermissionResolvable = ["ManageRoles"];
 

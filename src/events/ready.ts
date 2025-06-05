@@ -6,7 +6,7 @@ import registerCommands from "../scripts/register";
 const event: ClientEvent = {
     name: "ready",
     once: true,
-    async execute(client: ExtendedClient) {
+    execute: async (client: ExtendedClient) => {
         try {
             // Login Message
             console.log(`Logged in as: ${client.user.tag}`);

@@ -17,71 +17,40 @@ const command: Command = {
             required: false
         }
     ],
-    botPermissions: [],
-    permittedRoles: [],
     cooldown: 5,
-    enabled: true,
-    deferReply: true,
-    ephemeral: true,
-    async execute(
-        interaction: ChatInputCommandInteraction & any,
+    execute: async (
+        interaction: ChatInputCommandInteraction,
         client: ExtendedClient,
         Discord: typeof import("discord.js")
-    ) {
+    ) => {
         try {
-            const cmd: any = (interaction.options.get("command")?.value as string)?.toLowerCase();
+            const cmd = (interaction.options.get("command")?.value as string)?.toLowerCase();
 
-            const commands: string[] = [];
+            const commands: Command[] = [];
 
-            async function pushRoot() {
-                const files = fs.readdirSync(`./dist/commands`).filter((file) => file.endsWith(".js"));
+            async function pushCommands(path: string) {
+                const files = fs.readdirSync(path).filter((file) => file.endsWith(".js"));
 
                 for (const file of files) {
-                    const command = require(`../${file}`);
+                    const command = require(`${path.replace("./dist", "..")}/${file}`);
 
-                    if (command.name) {
-                        if (!command.enabled) continue;
-
-                        if (command.default_member_permissions) {
-                            if (!interaction.member.permissions.has(command.default_member_permissions)) continue;
-                        }
-
-                        commands.push(command.name);
-                    } else {
-                        continue;
+                    if (command.name && command.enabled) {
+                        commands.push(command);
                     }
                 }
             }
 
-            async function pushDir(dir: String) {
-                const files = fs.readdirSync(`./dist/commands/${dir}`).filter((file) => file.endsWith(".js"));
-
-                for (const file of files) {
-                    const command = require(`../${dir}/${file}`);
-
-                    if (command.name) {
-                        if (!command.enabled) continue;
-
-                        if (command.default_member_permissions) {
-                            if (!interaction.member.permissions.has(command.default_member_permissions)) continue;
-                        }
-
-                        commands.push(command.name);
-                    } else {
-                        continue;
-                    }
+            if (!cmd) {
+                await pushCommands("./dist/commands");
+                for (const dir of await getDirs("./dist/commands")) {
+                    await pushCommands(`./dist/commands/${dir}`);
                 }
             }
-
-            await pushRoot();
-            (await getDirs("./dist/commands")).forEach((dir) => pushDir(dir));
 
             const cmds = [];
 
             for (const cmd of commands) {
-                const info = client.commands.get(cmd);
-
-                cmds.push(`</${cmd}:${client.commandIds.get(cmd)}>\n${emoji.reply} ${info.description}`);
+                cmds.push(`</${cmd}:${client.commandIds.get(cmd.name)}>\n${emoji.reply} ${cmd.description}`);
             }
 
             const help = new Discord.EmbedBuilder()
@@ -97,10 +66,9 @@ const command: Command = {
             if (command) {
                 if (!command.enabled) return await interaction.editReply({ embeds: [help] });
 
-                const description = command.description ?? "N/A";
                 const botPermissions = command.botPermissions.length
                     ? `\`${command.botPermissions.join("`, `")}\``
-                    : "N/A";
+                    : "*N/A*";
                 const cooldown = command.cooldown
                     ? `${command.cooldown} second${command.cooldown === 1 ? "" : "s"}`
                     : "None";
@@ -109,7 +77,7 @@ const command: Command = {
                     .setColor(client.config.embeds.default as ColorResolvable)
                     .setTitle(`Command: ${command.name}`)
                     .addFields(
-                        { name: "Description", value: description },
+                        { name: "Description", value: command.description },
                         { name: "Cooldown", value: cooldown },
                         { name: "Bot Permissions", value: botPermissions }
                     )

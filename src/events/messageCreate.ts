@@ -8,7 +8,7 @@ import { cap } from "../util/functions";
 
 const event: GuildEvent = {
     name: "messageCreate",
-    async execute(client: ExtendedClient, Discord: typeof import("discord.js"), message: Message) {
+    execute: async (client: ExtendedClient, Discord: typeof import("discord.js"), message: Message) => {
         try {
             const requiredPerms: PermissionResolvable = ["SendMessages", "EmbedLinks"];
 

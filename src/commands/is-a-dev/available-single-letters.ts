@@ -8,18 +8,12 @@ import { getDomains } from "../../util/functions";
 const command: Command = {
     name: "available-single-letters",
     description: "Check if there are any available single letter subdomains.",
-    options: [],
-    botPermissions: [],
-    permittedRoles: [],
     cooldown: 5,
-    enabled: true,
-    deferReply: true,
-    ephemeral: false,
-    async execute(
+    execute: async (
         interaction: ChatInputCommandInteraction,
         client: ExtendedClient,
         Discord: typeof import("discord.js")
-    ) {
+    ) => {
         try {
             const subdomains = "abcdefghijklmnopqrstuvwxyz0123456789".split("");
 

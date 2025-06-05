@@ -1,4 +1,8 @@
-require("dotenv").config();
+import "dotenv/config";
+
+import Discord from "discord.js";
+import fs from "fs";
+import { QuickDB } from "quick.db";
 
 import * as Sentry from "@sentry/node";
 import { nodeProfilingIntegration } from "@sentry/profiling-node";
@@ -9,9 +13,7 @@ Sentry.init({
     integrations: [nodeProfilingIntegration()]
 });
 
-import Discord from "discord.js";
 import ExtendedClient from "./classes/ExtendedClient";
-import config from "../config.json";
 
 const client = new ExtendedClient({
     intents: [
@@ -31,31 +33,23 @@ const client = new ExtendedClient({
     }
 });
 
-import fs from "fs";
+// Error handling
+client.logError = function (err: Error) {
+    Sentry.captureException(err);
+    console.error(err);
+};
 
-// Error Handling
-process.on("unhandledRejection", (err: Error) => Sentry.captureException(err));
+process.on("unhandledRejection", (err: Error) => client.logError(err));
 
 // Quick.db Database
-import { QuickDB } from "quick.db";
+if (!fs.existsSync("data")) fs.mkdirSync("data");
+client.db = new QuickDB({ filePath: "data/db.sqlite" });
 
-if (!fs.existsSync("data")) {
-    fs.mkdirSync("data");
-}
-
-client.db = new QuickDB({
-    filePath: "data/db.sqlite"
-});
-
-// Global variable for config
-client.config = config;
-
-// Handlers
+client.config = require("../config.json");
 client.commands = new Discord.Collection();
 client.events = new Discord.Collection();
 
 import { loadHandlers } from "./util/functions";
 loadHandlers(client);
 
-// Login
 client.login(process.env.TOKEN);

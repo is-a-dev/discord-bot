@@ -70,14 +70,11 @@ const command: Command = {
     botPermissions: ["ManageRoles"],
     permittedRoles: ["boost_role_bypass", "booster", "donator"],
     cooldown: 5,
-    enabled: true,
-    deferReply: true,
-    ephemeral: false,
-    async execute(
+    execute: async (
         interaction: ChatInputCommandInteraction,
         client: ExtendedClient,
         Discord: typeof import("discord.js")
-    ) {
+    ) => {
         try {
             const subcommand = interaction.options.getSubcommand();
 
@@ -143,7 +140,7 @@ const command: Command = {
                 const role = await interaction.guild.roles.create({
                     name,
                     color,
-                    icon: icon ? icon.url : null,
+                    icon: icon?.url ?? null,
                     position,
                     permissions: []
                 });

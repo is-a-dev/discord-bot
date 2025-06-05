@@ -8,18 +8,12 @@ import { getDomains } from "../../util/functions";
 const command: Command = {
     name: "random-website",
     description: "Visit a random is-a.dev website.",
-    options: [],
-    botPermissions: [],
-    permittedRoles: [],
     cooldown: 5,
-    enabled: true,
-    deferReply: true,
-    ephemeral: false,
-    async execute(
+    execute: async (
         interaction: ChatInputCommandInteraction,
         client: ExtendedClient,
         Discord: typeof import("discord.js")
-    ) {
+    ) => {
         try {
             const data = (
                 await getDomains(client, {

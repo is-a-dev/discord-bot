@@ -8,18 +8,12 @@ import { emojis as emoji } from "../../../config.json";
 const command: Command = {
     name: "zone-updated",
     description: "Get the last time the is-a.dev zone was updated.",
-    options: [],
-    botPermissions: [],
-    permittedRoles: [],
     cooldown: 5,
-    enabled: true,
-    deferReply: true,
-    ephemeral: false,
-    async execute(
+    execute: async (
         interaction: ChatInputCommandInteraction,
         client: ExtendedClient,
         Discord: typeof import("discord.js")
-    ) {
+    ) => {
         try {
             const res = await lookupTxt(`_zone-updated.is-a.dev`, {
                 endpoints: ["one.one.one.one", "dns.google"]

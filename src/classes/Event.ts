@@ -7,6 +7,6 @@ export class ClientEvent {
 }
 
 export class GuildEvent {
-    public name: string;
+    public name: keyof ClientEvents;
     public execute: Function;
 }

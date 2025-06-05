@@ -6,32 +6,29 @@ import { getDirs } from "../util/functions";
 import * as Sentry from "@sentry/node";
 
 export = async (client: ExtendedClient) => {
-    async function loadRoot() {
-        const files = fs.readdirSync(`./dist/commands`).filter((file: String) => file.endsWith(".js"));
+    function loadCommands(path: string) {
+        const files = fs.readdirSync(path).filter((file) => file.endsWith(".js"));
 
         for (const file of files) {
-            const command = require(`../commands/${file}`);
+            const command = require(`${path.replace("./dist", "..")}/${file}`);
 
-            client.commands.set(command.name, command);
+            if (!command.botPermissions) command.botPermissions = [];
+            if (!command.cooldown) command.cooldown = 0;
+            if (command.deferReply == null) command.deferReply = true;
+            if (command.enabled == null) command.enabled = true;
+            if (command.ephemeral == null) command.ephemeral = false;
+            if (!command.options) command.options = [];
+            if (!command.permittedRoles) command.permittedRoles = [];
 
-            console.log(`Loaded Command: ${command.name}`);
+            if (command.enabled) {
+                client.commands.set(command.name, command);
+                console.log(`Loaded Command: ${command.name}`);
+            }
         }
     }
 
-    async function loadDir(dir: String) {
-        const files = fs.readdirSync(`./dist/commands/${dir}`).filter((file: String) => file.endsWith(".js"));
-
-        for (const file of files) {
-            const command = require(`../commands/${dir}/${file}`);
-
-            client.commands.set(command.name, command);
-
-            console.log(`Loaded Command: ${command.name}`);
-        }
-    }
-
-    await loadRoot();
-    (await getDirs("./dist/commands")).forEach((dir: String) => loadDir(dir));
+    loadCommands("./dist/commands");
+    (await getDirs("./dist/commands")).forEach((dir) => loadCommands(`./dist/commands/${dir}`));
 
     client.logCommandError = async function (
         err: Error,
@@ -52,6 +49,4 @@ export = async (client: ExtendedClient) => {
             ? await interaction.editReply({ embeds: [error] })
             : await interaction.reply({ embeds: [error], flags: MessageFlags.Ephemeral });
     };
-
-    require("dotenv").config();
 };

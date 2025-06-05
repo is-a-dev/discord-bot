@@ -18,17 +18,12 @@ const command: Command = {
             autocomplete: true
         }
     ],
-    botPermissions: [],
-    permittedRoles: [],
     cooldown: 5,
-    enabled: true,
-    deferReply: true,
-    ephemeral: false,
-    async execute(
+    execute: async (
         interaction: ChatInputCommandInteraction,
         client: ExtendedClient,
         Discord: typeof import("discord.js")
-    ) {
+    ) => {
         try {
             const subdomain = (interaction.options.get("subdomain").value as string).toLowerCase();
 
@@ -198,24 +193,28 @@ const command: Command = {
             client.logCommandError(err, interaction, Discord);
         }
     },
-    autocomplete: async (interaction: AutocompleteInteraction, client: ExtendedClient) => {
-        const option = interaction.options.getFocused(true);
+    async autocomplete(interaction: AutocompleteInteraction, client: ExtendedClient) {
+        try {
+            const option = interaction.options.getFocused(true);
 
-        if (option.name === "subdomain") {
-            const choices = (
-                await getDomains(client, {
-                    excludeFlags: ["internal", "reserved"],
-                    resultLimit: 25,
-                    subdomainIncludes: option.value
-                })
-            ).map((entry: any) => {
-                return {
-                    name: entry.subdomain,
-                    value: entry.subdomain
-                };
-            });
+            if (option.name === "subdomain") {
+                const choices = (
+                    await getDomains(client, {
+                        excludeFlags: ["internal", "reserved"],
+                        resultLimit: 25,
+                        subdomainIncludes: option.value
+                    })
+                ).map((entry: any) => {
+                    return {
+                        name: entry.subdomain,
+                        value: entry.subdomain
+                    };
+                });
 
-            await interaction.respond(choices);
+                await interaction.respond(choices);
+            }
+        } catch (err) {
+            client.logError(err);
         }
     }
 };

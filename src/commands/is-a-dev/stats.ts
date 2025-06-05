@@ -16,17 +16,12 @@ const command: Command = {
             autocomplete: true
         }
     ],
-    botPermissions: [],
-    permittedRoles: [],
     cooldown: 5,
-    enabled: true,
-    deferReply: true,
-    ephemeral: false,
-    async execute(
+    execute: async (
         interaction: ChatInputCommandInteraction,
         client: ExtendedClient,
         Discord: typeof import("discord.js")
-    ) {
+    ) => {
         try {
             const user = (interaction.options.get("user")?.value as string)?.toLowerCase();
 
@@ -100,17 +95,21 @@ const command: Command = {
         }
     },
     autocomplete: async (interaction: AutocompleteInteraction, client: ExtendedClient) => {
-        const option = interaction.options.getFocused(true);
+        try {
+            const option = interaction.options.getFocused(true);
 
-        if (option.name === "user") {
-            const choices = (await getUsernames(client, { usernameIncludes: option.value, resultLimit: 25 })).map(
-                (username) => ({
-                    name: username,
-                    value: username
-                })
-            );
+            if (option.name === "user") {
+                const choices = (await getUsernames(client, { usernameIncludes: option.value, resultLimit: 25 })).map(
+                    (username) => ({
+                        name: username,
+                        value: username
+                    })
+                );
 
-            await interaction.respond(choices);
+                await interaction.respond(choices);
+            }
+        } catch (err) {
+            client.logError(err);
         }
     }
 };

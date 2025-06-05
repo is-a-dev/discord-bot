@@ -7,18 +7,12 @@ const bot = require("../../../package.json");
 const command: Command = {
     name: "bot",
     description: "Different information about the bot.",
-    options: [],
-    botPermissions: [],
-    permittedRoles: [],
     cooldown: 5,
-    enabled: true,
-    deferReply: true,
-    ephemeral: true,
-    async execute(
+    execute: async (
         interaction: ChatInputCommandInteraction,
         client: ExtendedClient,
         Discord: typeof import("discord.js")
-    ) {
+    ) => {
         try {
             const info = new Discord.EmbedBuilder()
                 .setColor(client.config.embeds.default as ColorResolvable)

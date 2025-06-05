@@ -40,17 +40,13 @@ const command: Command = {
             description: "Disconnect your GitHub account."
         }
     ],
-    botPermissions: [],
-    permittedRoles: [],
     cooldown: 5,
-    enabled: true,
-    deferReply: true,
     ephemeral: true,
-    async execute(
+    execute: async (
         interaction: ChatInputCommandInteraction,
         client: ExtendedClient,
         Discord: typeof import("discord.js")
-    ) {
+    ) => {
         try {
             const subcommand = interaction.options.getSubcommand();
 
@@ -352,7 +348,7 @@ const command: Command = {
                 }
             }
         } catch (err) {
-            client.logCommandError(err, interaction, null);
+            client.logError(err);
         }
     }
 };

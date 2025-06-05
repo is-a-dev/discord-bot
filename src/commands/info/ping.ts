@@ -7,18 +7,13 @@ import { emojis as emoji } from "../../../config.json";
 const command: Command = {
     name: "ping",
     description: "Check the bot's latency.",
-    options: [],
-    botPermissions: [],
-    permittedRoles: [],
     cooldown: 10,
-    enabled: true,
     deferReply: false,
-    ephemeral: true,
-    async execute(
+    execute: async (
         interaction: ChatInputCommandInteraction,
         client: ExtendedClient,
         Discord: typeof import("discord.js")
-    ) {
+    ) => {
         try {
             // Get ping
             const botLatency = Date.now() - interaction.createdTimestamp;
