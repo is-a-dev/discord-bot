@@ -66,7 +66,8 @@ const event: GuildEvent = {
                     const res = data[0];
 
                     const state = res.state === "open" ? "open" : res.merged_at ? "merged" : "closed";
-                    const status = [stateEmojis[state], state.charAt(0).toUpperCase() + state.slice(1)];
+                    const upperState = state.charAt(0).toUpperCase() + state.slice(1);
+                    const status = [stateEmojis[state], upperState === "Open" ? "Opened" : upperState];
 
                     if (state === "open") status.push(`<t:${Math.floor(new Date(res.created_at).getTime() / 1000)}:R>`);
                     if (state === "closed") status.push(`<t:${Math.floor(new Date(res.closed_at).getTime() / 1000)}:R> by [${res.closed_by.login}](${res.closed_by.html_url})`);
