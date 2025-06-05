@@ -32,7 +32,7 @@ const command: Command = {
                 const files = fs.readdirSync(path).filter((file) => file.endsWith(".js"));
 
                 for (const file of files) {
-                    const command = require(`${path.replace("./dist", "..")}/${file}`);
+                    const command = require(`${path.replace("./dist", "../../")}/${file}`);
 
                     if (command.name && command.enabled) {
                         commands.push(command);
