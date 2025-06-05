@@ -17,16 +17,15 @@ const event: GuildEvent = {
             if (!message.guild.members.me.permissions.has(requiredPerms)) return;
 
             // GitHub Pull Requests
-            const prIds = [...new Set(message.content.match(/##(\d{1,7})/g))].slice(0, 10) || [];
+            const matches = [...message.content.matchAll(/##(\d{1,7})/g)];
+            const prIds = [...new Set(matches.map(m => m[1]))].slice(0, 10);
 
             if (prIds.length > 0) {
                 const data = [];
 
                 for (const prId of prIds) {
-                    const id = prId.replace(/##/g, "");
-
                     try {
-                        const res = (await axios.get(`https://api.github.com/repos/is-a-dev/register/issues/${id}`)).data;
+                        const res = (await axios.get(`https://api.github.com/repos/is-a-dev/register/issues/${prId}`)).data;
 
                         if (!res.pull_request) continue;
 
