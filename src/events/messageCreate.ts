@@ -74,7 +74,7 @@ const event: GuildEvent = {
                         .setTitle(cap(res.title, 100))
                         .setURL(res.html_url)
                         .addFields(
-                            { name: "State", value: `${stateEmojis[state]} ${state.charAt(0).toUpperCase() + state.slice(1)}` }
+                            { name: "Status", value: `${stateEmojis[state]} ${state.charAt(0).toUpperCase() + state.slice(1)}` }
                         )
                         .setFooter({ text: `#${res.number}` })
                         .setTimestamp(new Date(res.created_at));
