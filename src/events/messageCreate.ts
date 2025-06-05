@@ -17,7 +17,7 @@ const event: GuildEvent = {
             if (!message.guild.members.me.permissions.has(requiredPerms)) return;
 
             // GitHub Pull Requests
-            const prIds = [...new Set(message.content.match(/##(\d{1,7})/g))].slice(0, 10) || []
+            const prIds = [...new Set(message.content.match(/##(\d{1,7})/g))].slice(0, 10) || [];
 
             if (prIds.length > 0) {
                 const data = [];
@@ -26,7 +26,8 @@ const event: GuildEvent = {
                     const id = prId.replace(/##/g, "");
 
                     try {
-                        const res = (await axios.get(`https://api.github.com/repos/is-a-dev/register/pulls/${id}`)).data;
+                        const res = (await axios.get(`https://api.github.com/repos/is-a-dev/register/pulls/${id}`))
+                            .data;
                         data.push(res);
                     } catch {
                         continue;
@@ -56,10 +57,8 @@ const event: GuildEvent = {
                         const prEmbed = new Discord.EmbedBuilder()
                             .setColor(color[state])
                             .setAuthor({ name: res.user.login, iconURL: res.user.avatar_url, url: res.user.html_url })
-                            .setTitle(`${stateEmojis[state]} ${cap(res.title, 100)}`)
-                            .setURL(res.html_url)
-                            .setFooter({ text: `#${res.number}` })
-                            .setTimestamp(new Date(res.created_at));
+                            .setTitle(`${stateEmojis[state]} ${cap(res.title, 50)} (#${res.number})`)
+                            .setURL(res.html_url);
 
                         embeds.push(prEmbed);
                     }
@@ -71,12 +70,12 @@ const event: GuildEvent = {
                     const prEmbed = new Discord.EmbedBuilder()
                         .setColor(color[state])
                         .setAuthor({ name: res.user.login, iconURL: res.user.avatar_url, url: res.user.html_url })
-                        .setTitle(cap(res.title, 100))
+                        .setTitle(`${cap(res.title, 50)} (#${res.number})`)
                         .setURL(res.html_url)
-                        .addFields(
-                            { name: "Status", value: `${stateEmojis[state]} ${state.charAt(0).toUpperCase() + state.slice(1)}` }
-                        )
-                        .setFooter({ text: `#${res.number}` })
+                        .addFields({
+                            name: "Status",
+                            value: `${stateEmojis[state]} ${state.charAt(0).toUpperCase() + state.slice(1)}`
+                        })
                         .setTimestamp(new Date(res.created_at));
 
                     embeds.push(prEmbed);
