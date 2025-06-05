@@ -66,6 +66,43 @@ const event: ClientEvent = {
 
                 console.log(`Assigned roles to ${updatedMembers} members.`);
             }
+
+            // Update boost roles
+            const boostRoles: any = client.db.get("boost_roles") || {};
+            const boostUserIds: string[] = Object.keys(boostRoles);
+
+            for (const userId of boostUserIds) {
+                const user = guild.members.cache.get(userId);
+
+                const roleId = boostRoles[userId];
+                const role = guild.roles.cache.get(roleId);
+
+                if (!role) {
+                    await client.db.delete(`boost_roles.${userId}`);
+                    continue;
+                }
+
+                if (!user) {
+                    await role.delete();
+                    await client.db.delete(`boost_roles.${userId}`);
+                    continue;
+                }
+
+                if (role && !user.roles.cache.has(role.id)) {
+                    await user.roles.add(role);
+                    continue;
+                }
+
+                const eligibleRoleIds = [roles.boost_role_bypass, roles.booster, roles.donator];
+
+                const hasEligibleRole = user.roles.cache.some((r) => eligibleRoleIds.includes(r.id));
+
+                if (!hasEligibleRole) {
+                    await role.delete();
+                    await client.db.delete(`boost_roles.${userId}`);
+                    continue;
+                }
+            }
         } catch (err) {
             client.logError(err);
         }

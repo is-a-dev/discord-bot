@@ -51,7 +51,7 @@ const command: Command = {
                     type: 3,
                     name: "color",
                     description: "The new color of the boost role. Use hex format (e.g. #0096FF)",
-                    min_length: 4,
+                    min_length: 7,
                     max_length: 7
                 },
                 {
@@ -118,7 +118,7 @@ const command: Command = {
                     if (existingRole) {
                         const roleExists = new Discord.EmbedBuilder()
                             .setColor(client.config.embeds.error as ColorResolvable)
-                            .setDescription(`${emoji.cross} You already have a boost role: \`${existingRole}\`.`);
+                            .setDescription(`${emoji.cross} You already have a boost role: ${existingRole}`);
 
                         await interaction.editReply({ embeds: [roleExists] });
                         return;
