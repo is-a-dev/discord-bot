@@ -17,7 +17,7 @@ const event: GuildEvent = {
             if (!message.guild.members.me.permissions.has(requiredPerms)) return;
 
             // GitHub Pull Requests
-            const prIds = message.content.match(/##(\d{1,7})/g)?.slice(0, 10) || [];
+            const prIds = [...new Set(message.content.match(/##(\d{1,7})/g))].slice(0, 10) || []
 
             if (prIds.length > 0) {
                 const data = [];
@@ -49,7 +49,23 @@ const event: GuildEvent = {
 
                 const embeds = [];
 
-                for (const res of data) {
+                if (data.length > 1) {
+                    for (const res of data) {
+                        const state = res.state === "open" ? "open" : res.merged_at ? "merged" : "closed";
+
+                        const prEmbed = new Discord.EmbedBuilder()
+                            .setColor(color[state])
+                            .setAuthor({ name: res.user.login, iconURL: res.user.avatar_url, url: res.user.html_url })
+                            .setTitle(`${stateEmojis[state]} ${cap(res.title, 100)}`)
+                            .setURL(res.html_url)
+                            .setFooter({ text: `#${res.number}` })
+                            .setTimestamp(new Date(res.created_at));
+
+                        embeds.push(prEmbed);
+                    }
+                } else {
+                    const res = data[0];
+
                     const state = res.state === "open" ? "open" : res.merged_at ? "merged" : "closed";
 
                     const prEmbed = new Discord.EmbedBuilder()
@@ -57,20 +73,11 @@ const event: GuildEvent = {
                         .setAuthor({ name: res.user.login, iconURL: res.user.avatar_url, url: res.user.html_url })
                         .setTitle(cap(res.title, 100))
                         .setURL(res.html_url)
-                        .addFields({
-                            name: "Status",
-                            value: `${stateEmojis[state]} ${state.charAt(0).toUpperCase() + state.slice(1)}`,
-                            inline: true
-                        })
+                        .addFields(
+                            { name: "State", value: `${stateEmojis[state]} ${state.charAt(0).toUpperCase() + state.slice(1)}` }
+                        )
+                        .setFooter({ text: `#${res.number}` })
                         .setTimestamp(new Date(res.created_at));
-
-                    if (res.labels.length > 0) {
-                        prEmbed.addFields({
-                            name: "Labels",
-                            value: `\`${res.labels.map((l: { name: string }) => l.name).join("`, `")}\``,
-                            inline: true
-                        });
-                    }
 
                     embeds.push(prEmbed);
                 }
