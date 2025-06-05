@@ -17,7 +17,7 @@ const command: Command = {
                     type: 3,
                     name: "color",
                     description: "The color of the boost role. Use hex format (e.g. #0096FF)",
-                    min_length: 4,
+                    min_length: 7,
                     max_length: 7,
                     required: true
                 },
