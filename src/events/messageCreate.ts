@@ -66,6 +66,11 @@ const event: GuildEvent = {
                     const res = data[0];
 
                     const state = res.state === "open" ? "open" : res.merged_at ? "merged" : "closed";
+                    const status = [stateEmojis[state], state.charAt(0).toUpperCase() + state.slice(1)];
+
+                    if (state === "open") status.push(`<t:${Math.floor(new Date(res.created_at).getTime() / 1000)}:R>`);
+                    if (state === "closed") status.push(`<t:${Math.floor(new Date(res.closed_at).getTime() / 1000)}:R> by [${res.closed_by.login}](${res.closed_by.html_url})`);
+                    if (state === "merged") status.push (`<t:${Math.floor(new Date(res.merged_at).getTime() / 1000)}:R> by [${res.merged_by.login}](${res.merged_by.html_url})`);
 
                     const prEmbed = new Discord.EmbedBuilder()
                         .setColor(color[state])
@@ -74,9 +79,18 @@ const event: GuildEvent = {
                         .setURL(res.html_url)
                         .addFields({
                             name: "Status",
-                            value: `${stateEmojis[state]} ${state.charAt(0).toUpperCase() + state.slice(1)}`
+                            value: status.join(" "),
+                            inline: true
                         })
                         .setTimestamp(new Date(res.created_at));
+
+                    if (res.labels.length > 0) {
+                        prEmbed.addFields({
+                            name: "Labels",
+                            value: `\`${res.labels.map((l: { name: string }) => l.name).join("`, `")}\``,
+                            inline: true
+                        });
+                    }
 
                     embeds.push(prEmbed);
                 }
