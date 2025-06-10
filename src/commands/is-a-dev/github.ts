@@ -4,7 +4,7 @@ import { AutocompleteInteraction, ChatInputCommandInteraction, ColorResolvable }
 
 import { createOAuthDeviceAuth } from "@octokit/auth-oauth-device";
 import { emojis as emoji } from "../../../config.json";
-import { Octokit } from "@octokit/core";
+import { getUser, getUserEmails } from "../../lib/github";
 
 const command: Command = {
     name: "github",
@@ -62,32 +62,42 @@ const command: Command = {
                     return;
                 }
 
-                const octokit = new Octokit({ auth: data.token });
+                const user = await getUser(data.token);
 
-                const user = await octokit.request("GET /user");
-                const emails = await octokit.request("GET /user/emails");
+                if (!user) {
+                    await client.db.delete(`github_connections.${interaction.user.id}`);
+
+                    const error = new Discord.EmbedBuilder()
+                        .setColor(client.config.embeds.error as ColorResolvable)
+                        .setDescription(`${emoji.cross} You have been logged out. Please reconnect your account.`);
+
+                    await interaction.editReply({ embeds: [error] });
+                    return;
+                }
+
+                const emails = await getUserEmails(data.token);
 
                 let emailToUse = data.email.toLowerCase();
 
-                if (!emails.data.some((e) => e.email.toLowerCase() === data.email.toLowerCase())) {
-                    emailToUse = emails.data.find((e) => e.primary).email.toLowerCase();
+                if (!emails.some((e) => e.email.toLowerCase() === data.email.toLowerCase())) {
+                    emailToUse = emails.find((e) => e.primary).email.toLowerCase();
                 }
 
                 const updatedData = {
-                    id: user.data.id,
-                    username: user.data.login,
+                    id: user.id,
+                    username: user.username,
                     email: emailToUse,
-                    avatar: user.data.avatar_url,
+                    avatar: user.avatar,
                     token: data.token,
                     createdAt: data.createdAt,
                     updatedAt: new Date()
                 };
 
                 if (
-                    user.data.id !== data.id ||
-                    user.data.login !== data.username ||
+                    user.id !== data.id ||
+                    user.username !== data.username ||
                     emailToUse !== data.email.toLowerCase() ||
-                    user.data.avatar_url !== data.avatar
+                    user.avatar !== data.avatar
                 ) {
                     await client.db.set(`github_connections.${interaction.user.id}`, updatedData);
                     data = updatedData;
@@ -128,16 +138,21 @@ const command: Command = {
                     return;
                 }
 
-                const octokit = new Octokit({ auth: data.token });
+                const user = await getUser(data.token);
 
-                const user = await octokit.request("GET /user");
-                const emails = await octokit.request("GET /user/emails");
-                const emailExists = emails.data.some(
-                    (e) =>
-                        e.email.toLowerCase() === email &&
-                        e.verified &&
-                        !e.email.toLowerCase().endsWith("@users.noreply.github.com")
-                );
+                if (!user) {
+                    await client.db.delete(`github_connections.${interaction.user.id}`);
+
+                    const error = new Discord.EmbedBuilder()
+                        .setColor(client.config.embeds.error as ColorResolvable)
+                        .setDescription(`${emoji.cross} You have been logged out. Please reconnect your account.`);
+
+                    await interaction.editReply({ embeds: [error] });
+                    return;
+                }
+
+                const emails = await getUserEmails(data.token);
+                const emailExists = emails.some((e) => e.email.toLowerCase() === email);
 
                 if (email.toLowerCase() === data.email.toLowerCase()) {
                     if (emailExists) {
@@ -148,13 +163,13 @@ const command: Command = {
                         await interaction.editReply({ embeds: [error] });
                         return;
                     } else {
-                        const primaryEmail = (emails.data.find((e) => e.primary)).email.toLowerCase();
+                        const primaryEmail = emails.find((e) => e.primary).email.toLowerCase();
 
                         const updatedData = {
-                            id: user.data.id,
-                            username: user.data.login,
+                            id: user.id,
+                            username: user.username,
                             email: primaryEmail,
-                            avatar: user.data.avatar_url,
+                            avatar: user.avatar,
                             token: data.token,
                             createdAt: data.createdAt,
                             updatedAt: new Date()
@@ -164,7 +179,9 @@ const command: Command = {
 
                         const error = new Discord.EmbedBuilder()
                             .setColor(client.config.embeds.error as ColorResolvable)
-                            .setDescription(`${emoji.cross} \`${email}\` is no longer a verified email on your GitHub account. Your selected email has been updated to your primary email (\`${primaryEmail}\`).`);
+                            .setDescription(
+                                `${emoji.cross} \`${email}\` is no longer a verified email on your GitHub account. Your selected email has been updated to your primary email (\`${primaryEmail}\`).`
+                            );
 
                         await interaction.editReply({ embeds: [error] });
                         return;
@@ -181,10 +198,10 @@ const command: Command = {
                 }
 
                 const updatedData = {
-                    id: user.data.id,
-                    username: user.data.login,
+                    id: user.id,
+                    username: user.username,
                     email,
-                    avatar: user.data.avatar_url,
+                    avatar: user.avatar,
                     token: data.token,
                     createdAt: data.createdAt,
                     updatedAt: new Date()
@@ -204,33 +221,36 @@ const command: Command = {
             if (subcommand === "login") {
                 const data = await client.db.get(`github_connections.${interaction.user.id}`);
 
-                if (data) {
-                    const octokit = new Octokit({ auth: data.token });
+                userExists: if (data) {
+                    const user = await getUser(data.token);
 
-                    const user = await octokit.request("GET /user");
-                    const emails = await octokit.request("GET /user/emails");
+                    if (!user) {
+                        await client.db.delete(`github_connections.${interaction.user.id}`);
+                        break userExists;
+                    }
 
+                    const emails = await getUserEmails(data.token);
                     let emailToUse = data.email.toLowerCase();
 
-                    if (!emails.data.some((e) => e.email.toLowerCase() === data.email.toLowerCase())) {
-                        emailToUse = emails.data.find((e) => e.primary).email.toLowerCase();
+                    if (!emails.some((e) => e.email.toLowerCase() === data.email.toLowerCase())) {
+                        emailToUse = emails.find((e) => e.primary).email.toLowerCase();
                     }
 
                     const newData = {
-                        id: user.data.id,
-                        username: user.data.login,
+                        id: user.id,
+                        username: user.username,
                         email: emailToUse,
-                        avatar: user.data.avatar_url,
+                        avatar: user.avatar,
                         token: data.token,
                         createdAt: data.createdAt,
                         updatedAt: new Date()
                     };
 
                     if (
-                        user.data.id !== data.id ||
-                        user.data.login !== data.username ||
+                        user.id !== data.id ||
+                        user.username !== data.username ||
                         emailToUse !== data.email.toLowerCase() ||
-                        user.data.avatar_url !== data.avatar
+                        user.avatar !== data.avatar
                     ) {
                         await client.db.set(`github_connections.${interaction.user.id}`, newData);
                     }
@@ -266,18 +286,16 @@ const command: Command = {
 
                 await interaction.editReply({ embeds: [loadingData] });
 
-                const octokit = new Octokit({ auth: tokenAuth.token });
+                const user = await getUser(tokenAuth.token);
+                const emails = await getUserEmails(tokenAuth.token);
 
-                const user = await octokit.request("GET /user");
-                const emails = await octokit.request("GET /user/emails");
-
-                const email = emails.data.find((e) => e.primary).email.toLowerCase();
+                const email = emails.find((e) => e.primary).email.toLowerCase();
 
                 await client.db.set(`github_connections.${interaction.user.id}`, {
-                    id: user.data.id,
-                    username: user.data.login,
+                    id: user.id,
+                    username: user.username,
                     email,
-                    avatar: user.data.avatar_url,
+                    avatar: user.avatar,
                     token: tokenAuth.token,
                     createdAt: new Date(),
                     updatedAt: new Date()
@@ -285,9 +303,9 @@ const command: Command = {
 
                 const loggedIn = new Discord.EmbedBuilder()
                     .setColor(client.config.embeds.default as ColorResolvable)
-                    .setThumbnail(user.data.avatar_url)
+                    .setThumbnail(user.avatar)
                     .setTitle("Connected to GitHub")
-                    .addFields({ name: "Username", value: user.data.login }, { name: "Selected Email", value: email })
+                    .addFields({ name: "Username", value: user.username }, { name: "Selected Email", value: email })
                     .setTimestamp();
 
                 await interaction.editReply({ embeds: [loggedIn] });
@@ -329,16 +347,17 @@ const command: Command = {
 
                     if (!data) return await interaction.respond([]);
 
-                    const octokit = new Octokit({ auth: data.token });
-                    const emails = await octokit.request("GET /user/emails");
+                    const user = await getUser(data.token);
 
-                    const filteredEmails = emails.data
-                        .filter(
-                            (e) =>
-                                e.email.toLowerCase() !== data.email.toLowerCase() &&
-                                e.verified &&
-                                !e.email.toLowerCase().endsWith("@users.noreply.github.com")
-                        )
+                    if (!user) {
+                        await client.db.delete(`github_connections.${interaction.user.id}`);
+                        return await interaction.respond([]);
+                    }
+
+                    const emails = await getUserEmails(data.token);
+
+                    const filteredEmails = emails
+                        .filter((e) => e.email.toLowerCase() !== data.email.toLowerCase())
                         .filter((e) => e.email.toLowerCase().includes(option.value.toLowerCase()))
                         .sort((a, b) => a.email.localeCompare(b.email))
                         .slice(0, 25)
