@@ -105,9 +105,11 @@ const command: Command = {
             const colorRegex = /^#([0-9A-F]{6}|[0-9A-F]{3})$/i;
 
             if (subcommand === "create") {
-                const name = interaction.options.get("name")?.value as string || interaction.user.username;
+                const name = (interaction.options.get("name")?.value as string) || interaction.user.username;
                 const color = interaction.options.get("color").value as ColorResolvable;
-                const icon = interaction.options.getAttachment("icon");
+                let icon = interaction.options.getAttachment("icon");
+
+                if (interaction.guild.premiumSubscriptionCount < 7) icon = null;
 
                 if (currentBoostRole) {
                     const existingRole = interaction.guild.roles.cache.get(currentBoostRole.role);
@@ -135,7 +137,8 @@ const command: Command = {
 
                 // Random position between brBelow and brAbove
                 // All boost roles should be above brAbove and below brBelow
-                const position = Math.floor(Math.random() * (brBelow.position - brAbove.position - 1)) + brAbove.position + 1;
+                const position =
+                    Math.floor(Math.random() * (brBelow.position - brAbove.position - 1)) + brAbove.position + 1;
 
                 const role = await interaction.guild.roles.create({
                     name,
@@ -151,8 +154,13 @@ const command: Command = {
 
                 const created = new Discord.EmbedBuilder()
                     .setColor(color)
-                    .setAuthor({ name, iconURL: role.iconURL() || undefined })
-                    .setDescription(`${emoji.tick} Your boost role has been created!`);
+                    .setThumbnail(role.iconURL())
+                    .setTitle("Boost Role Created")
+                    .addFields(
+                        { name: "Name", value: `\`${role.name}\``, inline: true },
+                        { name: "Color", value: `\`${role.hexColor}\``, inline: true }
+                    )
+                    .setTimestamp();
 
                 await interaction.editReply({ embeds: [created] });
                 return;
