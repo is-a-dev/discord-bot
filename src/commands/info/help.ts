@@ -50,7 +50,7 @@ const command: Command = {
             const cmds = [];
 
             for (const cmd of commands) {
-                cmds.push(`</${cmd}:${client.commandIds.get(cmd.name)}>\n${emoji.reply} ${cmd.description}`);
+                cmds.push(`</${cmd.name}:${client.commandIds.get(cmd.name)}>\n${emoji.reply} ${cmd.description}`);
             }
 
             const help = new Discord.EmbedBuilder()
@@ -60,11 +60,17 @@ const command: Command = {
                 .setDescription(cmds.sort().join("\n"))
                 .setTimestamp();
 
-            // If a command was specified, get info on that command
-            const command = client.commands.get(cmd);
+            if (cmd) {
+                const command = client.commands.get(cmd);
 
-            if (command) {
-                if (!command.enabled) return await interaction.editReply({ embeds: [help] });
+                if (!command || !command.enabled) {
+                    const noCommand = new Discord.EmbedBuilder()
+                        .setColor(client.config.embeds.error as ColorResolvable)
+                        .setDescription(`${emoji.cross} No command found with the name \`${cmd}\`.`)
+
+                    await interaction.editReply({ embeds: [noCommand] });
+                    return;
+                }
 
                 const botPermissions = command.botPermissions.length
                     ? `\`${command.botPermissions.join("`, `")}\``
