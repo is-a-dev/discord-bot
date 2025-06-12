@@ -81,7 +81,7 @@ const event: GuildEvent = {
                         const embed = new Discord.EmbedBuilder()
                             .setColor(color[state])
                             .setAuthor({ name: res.user.login, iconURL: res.user.avatar_url, url: res.user.html_url })
-                            .setTitle(`${stateEmojis[state]} ${cap(res.title, 50)} (#${res.number})`)
+                            .setTitle(`${stateEmojis[state]} ${cap(res.title, 200)} (#${res.number})`)
                             .setURL(res.html_url);
 
                         embeds.push(embed);
@@ -142,7 +142,7 @@ const event: GuildEvent = {
                     const embed = new Discord.EmbedBuilder()
                         .setColor(color[state])
                         .setAuthor({ name: res.user.login, iconURL: res.user.avatar_url, url: res.user.html_url })
-                        .setTitle(`${cap(res.title, 50)} (#${res.number})`)
+                        .setTitle(`${cap(res.title, 200)} (#${res.number})`)
                         .setURL(res.html_url)
                         .addFields({
                             name: "Status",
