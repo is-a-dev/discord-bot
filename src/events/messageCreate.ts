@@ -89,18 +89,46 @@ const event: GuildEvent = {
                 } else {
                     const res = data[0];
 
-                    let state: State = res.state === "open" ? "issue_open" : "issue_closed";
+                    let state: State = null;
+
                     if (res.pull_request)
                         state =
                             res.state === "open" ? "pr_open" : res.pull_request.merged_at ? "pr_merged" : "pr_closed";
-                    const upperState = state.replace(/(issue|pr)_/, "").replace(/^\w/, (c) => c.toUpperCase());
+                    else {
+                        state =
+                            res.state === "open"
+                                ? "issue_open"
+                                : res.state_reason === "completed"
+                                ? "issue_completed"
+                                : "issue_closed";
+                    }
+
+                    let upperState = null;
+
+                    switch (state) {
+                        case "issue_open":
+                        case "pr_open":
+                            upperState = "Opened";
+                            break;
+                        case "issue_closed":
+                        case "issue_completed":
+                            upperState = `Closed as ${res.state_reason.replace(/_/g, " ")}`;
+                            break;
+                        case "pr_closed":
+                            upperState = "Closed";
+                            break;
+                        case "pr_merged":
+                            upperState = "Merged";
+                            break;
+                    }
+
                     const status = [`${emoji[state]} ${upperState}`];
 
-                    if (upperState === "Open")
+                    if (upperState === "Opened")
                         status.push(`<t:${Math.floor(new Date(res.created_at).getTime() / 1000)}:R>`);
-                    if (upperState === "Closed" && res.user.login === res.closed_by.login)
+                    if (upperState.startsWith("Closed") && res.user.login === res.closed_by.login)
                         status.push(`<t:${Math.floor(new Date(res.closed_at).getTime() / 1000)}:R>`);
-                    if (upperState === "Closed" && res.user.login !== res.closed_by.login)
+                    if (upperState.startsWith("Closed") && res.user.login !== res.closed_by.login)
                         status.push(
                             `<t:${Math.floor(new Date(res.closed_at).getTime() / 1000)}:R> by [${
                                 res.closed_by.login
