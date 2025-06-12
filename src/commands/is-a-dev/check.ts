@@ -13,7 +13,7 @@ const command: Command = {
             type: 3,
             name: "subdomain",
             description: "The subdomain you want to check.",
-            max_length: 244,
+            maxLength: 244,
             required: true
         }
     ],

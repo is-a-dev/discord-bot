@@ -14,7 +14,7 @@ const command: Command = {
             type: 3,
             name: "subdomain",
             description: "The subdomain you want to get the JSON file for.",
-            max_length: 253 - ".is-a.dev".length,
+            maxLength: 253 - ".is-a.dev".length,
             required: true,
             autocomplete: true
         }

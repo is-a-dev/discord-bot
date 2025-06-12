@@ -40,8 +40,10 @@ export default async function (client: ExtendedClient, guildId: string) {
             const command = require(`${path.replace("./dist", "..")}/${file}`);
 
             if (command.enabled) {
-                if (!command.contexts) command.contexts = [0]; // Default to GUILD
+                if (!command.type) command.type = 1; // Default to CHAT_INPUT
                 if (!command.integration_types) command.integration_types = [0]; // Default to GUILD_INSTALL
+                if (!command.contexts) command.contexts = [0]; // Default to GUILD
+
                 commands.push(command);
             }
         }

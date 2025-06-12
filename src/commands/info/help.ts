@@ -13,8 +13,7 @@ const command: Command = {
         {
             type: 3,
             name: "command",
-            description: "Get info on a specific command.",
-            required: false
+            description: "Get info on a specific command."
         }
     ],
     cooldown: 5,

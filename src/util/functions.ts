@@ -18,10 +18,10 @@ export async function cacheRawAPI(client: ExtendedClient): Promise<void> {
     }
 }
 
-export function cap(str: string, length: number) {
-    if (str == null || str?.length <= length) return str;
+export function cap(str: string, length: number): string {
+    if (str == null || str.length <= length) return str;
 
-    return str.substr(0, length - 1) + "**\u2026**";
+    return str.slice(0, length - 1) + "**\u2026**";
 }
 
 export async function getDirs(path: string): Promise<string[]> {

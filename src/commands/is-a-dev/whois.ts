@@ -13,7 +13,7 @@ const command: Command = {
             type: 3,
             name: "subdomain",
             description: "The subdomain you want to find information about.",
-            max_length: 253 - ".is-a.dev".length,
+            maxLength: 253 - ".is-a.dev".length,
             required: true,
             autocomplete: true
         }
@@ -193,7 +193,7 @@ const command: Command = {
             client.logCommandError(err, interaction, Discord);
         }
     },
-    async autocomplete(interaction: AutocompleteInteraction, client: ExtendedClient) {
+    autocomplete: async (interaction: AutocompleteInteraction, client: ExtendedClient) => {
         try {
             const option = interaction.options.getFocused(true);
 

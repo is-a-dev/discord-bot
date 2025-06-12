@@ -17,16 +17,16 @@ const command: Command = {
                     type: 3,
                     name: "color",
                     description: "The color of the boost role. Use hex format (e.g. #0096FF)",
-                    min_length: 7,
-                    max_length: 7,
+                    minLength: 7,
+                    maxLength: 7,
                     required: true
                 },
                 {
                     type: 3,
                     name: "name",
                     description: "The name of the boost role.",
-                    min_length: 3,
-                    max_length: 32
+                    minLength: 3,
+                    maxLength: 32
                 },
                 {
                     type: 11,
@@ -44,15 +44,15 @@ const command: Command = {
                     type: 3,
                     name: "name",
                     description: "The new name of the boost role.",
-                    min_length: 3,
-                    max_length: 32
+                    minLength: 3,
+                    maxLength: 32
                 },
                 {
                     type: 3,
                     name: "color",
                     description: "The new color of the boost role. Use hex format (e.g. #0096FF)",
-                    min_length: 7,
-                    max_length: 7
+                    minLength: 7,
+                    maxLength: 7
                 },
                 {
                     type: 11,

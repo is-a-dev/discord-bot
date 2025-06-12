@@ -12,8 +12,8 @@ const command: Command = {
             type: 3,
             name: "content",
             description: "The JSON you want to beautify.",
-            min_length: 3,
-            max_length: 2000,
+            minLength: 3,
+            maxLength: 2000,
             required: true
         },
         {

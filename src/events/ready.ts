@@ -8,10 +8,7 @@ const event: ClientEvent = {
     once: true,
     execute: async (client: ExtendedClient) => {
         try {
-            // Login Message
             console.log(`Logged in as: ${client.user.tag}`);
-
-            // Register Commands
             await registerCommands(client, client.config.guild);
 
             // Assign all users the correct roles
