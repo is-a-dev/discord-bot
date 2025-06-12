@@ -41,7 +41,7 @@ const event: GuildEvent = {
                 const color: Record<State, ColorResolvable> = {
                     issue_open: "#238636" as ColorResolvable,
                     issue_completed: "#8957e5" as ColorResolvable,
-                    issue_closed: "#da3633" as ColorResolvable,
+                    issue_closed: "#656c76" as ColorResolvable,
                     pr_open: "#238636" as ColorResolvable,
                     pr_closed: "#da3633" as ColorResolvable,
                     pr_merged: "#8957e5" as ColorResolvable
