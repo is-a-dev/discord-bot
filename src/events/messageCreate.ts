@@ -4,7 +4,7 @@ import { ColorResolvable, Message, PermissionResolvable } from "discord.js";
 
 import axios from "axios";
 import { emojis as emoji } from "../../config.json";
-import { cap } from "../util/functions";
+import { cap, processGitHubMarkdown } from "../util/functions";
 
 type State = "issue_open" | "issue_completed" | "issue_closed" | "pr_open" | "pr_closed" | "pr_merged";
 
@@ -144,6 +144,7 @@ const event: GuildEvent = {
                         .setAuthor({ name: res.user.login, iconURL: res.user.avatar_url, url: res.user.html_url })
                         .setTitle(`${cap(res.title, 200)} (#${res.number})`)
                         .setURL(res.html_url)
+                        .setDescription(cap(processGitHubMarkdown(res.body || ""), 4000))
                         .addFields({
                             name: "Status",
                             value: status.join(" "),
