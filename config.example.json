@@ -8,7 +8,13 @@
         "connection_excellent": "",
         "connection_good": "",
         "cross": "",
+        "issue_closed_completed": "",
+        "issue_closed_not_planned": "",
+        "issue_open": "",
         "ping": "",
+        "pr_closed": "",
+        "pr_merged": "",
+        "pr_open": "",
         "reply": "",
         "tick": ""
     },
