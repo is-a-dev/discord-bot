@@ -30,8 +30,6 @@ const event: GuildEvent = {
                         const res = (await axios.get(`https://api.github.com/repos/is-a-dev/register/issues/${prId}`))
                             .data;
 
-                        if (!res.pull_request) continue;
-
                         data.push(res);
                     } catch {
                         continue;
