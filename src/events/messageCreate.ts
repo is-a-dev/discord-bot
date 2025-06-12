@@ -126,9 +126,7 @@ const event: GuildEvent = {
 
                     if (upperState === "Opened")
                         status.push(`<t:${Math.floor(new Date(res.created_at).getTime() / 1000)}:R>`);
-                    if (upperState.startsWith("Closed") && res.user.login === res.closed_by.login)
-                        status.push(`<t:${Math.floor(new Date(res.closed_at).getTime() / 1000)}:R>`);
-                    if (upperState.startsWith("Closed") && res.user.login !== res.closed_by.login)
+                    if (upperState.startsWith("Closed"))
                         status.push(
                             `<t:${Math.floor(new Date(res.closed_at).getTime() / 1000)}:R> by [${
                                 res.closed_by.login
