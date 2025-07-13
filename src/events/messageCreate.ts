@@ -153,7 +153,7 @@ const event: GuildEvent = {
                         })
                         .setTimestamp(new Date(res.created_at));
 
-                    if (descMatch && descMatch[1] === prIds[0]) {
+                    if (descMatch && descMatch[1] === prIds[0] && res.body) {
                         embed.setDescription(cap(processGitHubMarkdown(res.body || ""), 4000));
                     }
 
