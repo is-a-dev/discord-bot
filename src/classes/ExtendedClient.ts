@@ -17,5 +17,7 @@ export default class ExtendedClient extends Client {
     public logError: Function;
     public rawAPICache: Domain[];
     public rawAPICacheLastUpdated: Date;
-    public validPermissions: (keyof typeof PermissionFlagsBits)[] = Object.keys(PermissionFlagsBits) as (keyof typeof PermissionFlagsBits)[];
+    public validPermissions: (keyof typeof PermissionFlagsBits)[] = Object.keys(
+        PermissionFlagsBits
+    ) as (keyof typeof PermissionFlagsBits)[];
 }

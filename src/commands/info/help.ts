@@ -65,7 +65,7 @@ const command: Command = {
                 if (!command || !command.enabled) {
                     const noCommand = new Discord.EmbedBuilder()
                         .setColor(client.config.embeds.error as ColorResolvable)
-                        .setDescription(`${emoji.cross} No command found with the name \`${cmd}\`.`)
+                        .setDescription(`${emoji.cross} No command found with the name \`${cmd}\`.`);
 
                     await interaction.editReply({ embeds: [noCommand] });
                     return;

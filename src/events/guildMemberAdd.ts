@@ -4,7 +4,7 @@ import { GuildMember, PermissionResolvable } from "discord.js";
 
 const event: GuildEvent = {
     name: "guildMemberAdd",
-    execute: async (client: ExtendedClient, Discord: typeof import("discord.js"), member: GuildMember) =>{
+    execute: async (client: ExtendedClient, Discord: typeof import("discord.js"), member: GuildMember) => {
         try {
             const requiredPerms: PermissionResolvable = ["ManageRoles"];
 
@@ -27,7 +27,10 @@ const event: GuildEvent = {
                 return;
             }
 
-            if (guild.members.me.roles.highest.position <= botRole.position || guild.members.me.roles.highest.position <= memberRole.position) {
+            if (
+                guild.members.me.roles.highest.position <= botRole.position ||
+                guild.members.me.roles.highest.position <= memberRole.position
+            ) {
                 console.error("Bot does not have permission to assign Bot/Member roles.");
                 return;
             }
@@ -41,6 +44,6 @@ const event: GuildEvent = {
             client.logError(err);
         }
     }
-}
+};
 
 export = event;

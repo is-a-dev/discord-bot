@@ -69,15 +69,15 @@ const event: GuildEvent = {
                                 res.state === "open"
                                     ? "pr_open"
                                     : res.pull_request.merged_at
-                                    ? "pr_merged"
-                                    : "pr_closed";
+                                      ? "pr_merged"
+                                      : "pr_closed";
                         else {
                             state =
                                 res.state === "open"
                                     ? "issue_open"
                                     : res.state_reason === "completed"
-                                    ? "issue_completed"
-                                    : "issue_closed";
+                                      ? "issue_completed"
+                                      : "issue_closed";
                         }
 
                         const embed = new Discord.EmbedBuilder()
@@ -101,8 +101,8 @@ const event: GuildEvent = {
                             res.state === "open"
                                 ? "issue_open"
                                 : res.state_reason === "completed"
-                                ? "issue_completed"
-                                : "issue_closed";
+                                  ? "issue_completed"
+                                  : "issue_closed";
                     }
 
                     let upperState = null;

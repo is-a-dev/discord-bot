@@ -7,7 +7,11 @@ import { emojis as emoji } from "../../../config.json";
 
 const cooldowns = new Map();
 
-export = async (client: ExtendedClient, Discord: typeof import("discord.js"), interaction: ChatInputCommandInteraction) => {
+export = async (
+    client: ExtendedClient,
+    Discord: typeof import("discord.js"),
+    interaction: ChatInputCommandInteraction
+) => {
     try {
         const command: Command = client.commands.get(interaction.commandName);
 
