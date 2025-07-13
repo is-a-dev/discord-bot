@@ -1,0 +1,15 @@
+*.log
+*.md
+*.tsbuildinfo
+.dockerignore
+.env
+.git
+.github
+.gitignore
+config.example.json
+data
+Dockerfile
+example.env
+LICENSE
+node_modules
+npm-debug.log
