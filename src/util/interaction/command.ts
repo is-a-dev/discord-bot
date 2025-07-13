@@ -1,5 +1,5 @@
 import ExtendedClient from "../../classes/ExtendedClient";
-import { ColorResolvable, CommandInteraction, MessageFlags } from "discord.js";
+import { ChatInputCommandInteraction, ColorResolvable, MessageFlags } from "discord.js";
 
 import Command from "../../classes/Command";
 
@@ -7,7 +7,7 @@ import { emojis as emoji } from "../../../config.json";
 
 const cooldowns = new Map();
 
-export = async (client: ExtendedClient, Discord: typeof import("discord.js"), interaction: CommandInteraction) => {
+export = async (client: ExtendedClient, Discord: typeof import("discord.js"), interaction: ChatInputCommandInteraction) => {
     try {
         const command: Command = client.commands.get(interaction.commandName);
 

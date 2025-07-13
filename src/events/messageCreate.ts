@@ -22,6 +22,8 @@ const event: GuildEvent = {
             const matches = [...message.content.matchAll(/##(\d{1,7})/g)];
             const prIds = [...new Set(matches.map((m) => m[1]))].slice(0, 10);
 
+            const descMatch = message.content.match(/###(\d{1,7})/);
+
             if (prIds.length > 0) {
                 const data = [];
 
@@ -144,13 +146,16 @@ const event: GuildEvent = {
                         .setAuthor({ name: res.user.login, iconURL: res.user.avatar_url, url: res.user.html_url })
                         .setTitle(`${cap(res.title, 200)} (#${res.number})`)
                         .setURL(res.html_url)
-                        .setDescription(cap(processGitHubMarkdown(res.body || ""), 4000))
                         .addFields({
                             name: "Status",
                             value: status.join(" "),
                             inline: true
                         })
                         .setTimestamp(new Date(res.created_at));
+
+                    if (descMatch && descMatch[1] === prIds[0]) {
+                        embed.setDescription(cap(processGitHubMarkdown(res.body || ""), 4000));
+                    }
 
                     if (res.labels.length > 0) {
                         embed.addFields({
