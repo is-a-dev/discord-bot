@@ -22,7 +22,7 @@
     "@octokit/core": "7.0.3",
     "@sentry/node": "9.38.0",
     "@sentry/profiling-node": "9.38.0",
-    "axios": "1.10.0",
+    "axios": "1.11.0",
     "better-sqlite3": "12.2.0",
     "discord.js": "14.21.0",
     "dns-query": "0.11.2",
