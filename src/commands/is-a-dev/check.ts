@@ -49,7 +49,7 @@ const command: Command = {
                     new Discord.ButtonBuilder()
                         .setStyle(Discord.ButtonStyle.Link)
                         .setLabel("Register")
-                        .setURL(`https://wdh.gg/XEMAmxc`)
+                        .setURL("https://github.com/is-a-dev/register")
                 );
 
                 await interaction.editReply({ embeds: [available], components: [registerButton] });
