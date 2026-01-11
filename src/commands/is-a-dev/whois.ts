@@ -73,9 +73,14 @@ const command: Command = {
                     switch (key) {
                         case "A":
                         case "AAAA":
-                        case "MX":
                         case "NS":
                             records.push(`**${key}**: \`${data.records[key].join("`, `")}\``);
+                            break;
+                        case "MX":
+                            const mxRecords = data.records.MX.map((v)=>
+                                typeof v === "string" ? v : v.target,
+                            );
+                            records.push(`**${key}**: \`${mxRecords.join("`, `")}\``);
                             break;
                         case "CAA":
                             records.push(
