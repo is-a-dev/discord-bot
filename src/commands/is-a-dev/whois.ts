@@ -78,12 +78,11 @@ const command: Command = {
                             break;
                         case "MX":
                             const mxRecords= data.records.MX.sort(
-                                (a, b) => {
-                                    const isObj = typeof a === "object" && typeof b === "object"
-                                    return isObj ? a.priority - b.priority : 0
-                                }
+                                (a, b) =>
+                                    typeof a === "object" && typeof b === "object" ? a.priority - b.priority : 0
                             ).map(
-                                (v)=> typeof v === "string" ? v : `${v.target} (${v.priority})`
+                                (v) =>
+                                    typeof v === "string" ? v : `${v.target} (${v.priority})`
                             )
                             records.push(`**${key}**: \`${mxRecords.join("`, `")}\``);
                             break;
