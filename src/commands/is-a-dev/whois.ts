@@ -77,19 +77,19 @@ const command: Command = {
                             records.push(`**${key}**: \`${data.records[key].join("`, `")}\``);
                             break;
                         case "MX":
-                            const mxRecords= data.records.MX.sort(
+                            const mxRecords = data.records.MX.sort(
                                 (a, b) =>
                                     typeof a === "object" && typeof b === "object" ? a.priority - b.priority : 0
                             ).map(
                                 (v) =>
-                                    typeof v === "string" ? v : `${v.target} (${v.priority})`
+                                    typeof v === "string" ? v : `${v.priority}: ${v.target}`
                             )
                             records.push(`**${key}**: \`${mxRecords.join("`, `")}\``);
                             break;
                         case "CAA":
                             records.push(
                                 `**${key}**: \`${data.records.CAA.map(
-                                    (entry) => `${entry.flags} ${entry.tag} "${entry.value}"`
+                                    (entry) => `${entry.tag} ${entry.value}`
                                 ).join("`, `")}\``
                             );
                             break;
