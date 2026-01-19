@@ -182,7 +182,7 @@ export type RecordsObject = {
         digest_type: number;
         digest: string;
     }[];
-    MX?: string[] | { priority: number; value: string }[];
+    MX?: string[] | { priority: number; target: string }[];
     NS?: string[];
     SRV?: {
         priority: number;

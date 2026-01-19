@@ -73,21 +73,30 @@ const command: Command = {
                     switch (key) {
                         case "A":
                         case "AAAA":
-                        case "MX":
                         case "NS":
                             records.push(`**${key}**: \`${data.records[key].join("`, `")}\``);
+                            break;
+                        case "MX":
+                            const mxRecords = data.records.MX.sort(
+                                (a, b) =>
+                                    typeof a === "object" && typeof b === "object" ? a.priority - b.priority : 0
+                            ).map(
+                                (v) =>
+                                    typeof v === "string" ? v : `${v.priority}: ${v.target}`
+                            )
+                            records.push(`**${key}**: \`${mxRecords.join("`, `")}\``);
                             break;
                         case "CAA":
                             records.push(
                                 `**${key}**: \`${data.records.CAA.map(
-                                    (entry: any) => `${entry.flag} ${entry.tag} "${entry.value}"`
+                                    (entry) => `${entry.tag} ${entry.value}`
                                 ).join("`, `")}\``
                             );
                             break;
                         case "DS":
                             records.push(
                                 `**${key}**: \`${data.records.DS.map(
-                                    (entry: any) =>
+                                    (entry) =>
                                         `${entry.key_tag} ${entry.algorithm} ${entry.digest_type} ${entry.digest}`
                                 ).join("`, `")}\``
                             );
@@ -95,14 +104,14 @@ const command: Command = {
                         case "SRV":
                             records.push(
                                 `**${key}**: \`${data.records.SRV.map(
-                                    (entry: any) => `${entry.priority} ${entry.weight} ${entry.port} ${entry.target}`
+                                    (entry) => `${entry.priority} ${entry.weight} ${entry.port} ${entry.target}`
                                 ).join("`, `")}\``
                             );
                             break;
                         case "TLSA":
                             records.push(
                                 `**${key}**: \`${data.records.TLSA.map(
-                                    (entry: any) =>
+                                    (entry) =>
                                         `${entry.usage} ${entry.selector} ${entry.matching_type} ${entry.data}`
                                 ).join("`, `")}\``
                             );
