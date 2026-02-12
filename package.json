@@ -20,17 +20,17 @@
   "dependencies": {
     "@octokit/auth-oauth-device": "8.0.3",
     "@octokit/core": "7.0.6",
-    "@sentry/node": "10.34.0",
-    "@sentry/profiling-node": "10.34.0",
+    "@sentry/node": "10.38.0",
+    "@sentry/profiling-node": "10.38.0",
     "axios": "1.13.5",
     "better-sqlite3": "12.6.2",
     "discord.js": "14.25.1",
     "dns-query": "0.11.2",
-    "dotenv": "17.2.3",
+    "dotenv": "17.3.1",
     "quick.db": "9.1.7"
   },
   "devDependencies": {
-    "@types/node": "24.10.9",
+    "@types/node": "24.10.13",
     "typescript": "5.9.3"
   }
 }
