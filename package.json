@@ -20,12 +20,12 @@
   "dependencies": {
     "@octokit/auth-oauth-device": "8.0.3",
     "@octokit/core": "7.0.6",
-    "@opentelemetry/instrumentation": "0.214.0",
-    "@sentry/node": "10.48.0",
-    "@sentry/profiling-node": "10.48.0",
-    "axios": "1.15.0",
+    "@opentelemetry/instrumentation": "0.216.0",
+    "@sentry/node": "10.51.0",
+    "@sentry/profiling-node": "10.51.0",
+    "axios": "1.15.2",
     "better-sqlite3": "12.9.0",
-    "discord.js": "14.26.2",
+    "discord.js": "14.26.3",
     "dns-query": "0.11.2",
     "dotenv": "17.4.2",
     "quick.db": "9.1.7"
