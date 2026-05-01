@@ -90,7 +90,7 @@ const event: ClientEvent = {
                     continue;
                 }
 
-                const eligibleRoleIds = [roles.boost_role_bypass, roles.booster, roles.donator];
+                const eligibleRoleIds = [roles.booster, roles.donator];
 
                 const hasEligibleRole = user.roles.cache.some((r) => eligibleRoleIds.includes(r.id));
 
