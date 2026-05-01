@@ -28,11 +28,11 @@ const command: Command = {
                     minLength: 3,
                     maxLength: 32
                 },
-                {
-                    type: 11,
-                    name: "icon",
-                    description: "The role icon to use for the boost role."
-                }
+                // {
+                //     type: 11,
+                //     name: "icon",
+                //     description: "The role icon to use for the boost role."
+                // }
             ]
         },
         {
@@ -54,11 +54,11 @@ const command: Command = {
                     minLength: 7,
                     maxLength: 7
                 },
-                {
-                    type: 11,
-                    name: "icon",
-                    description: "The new role icon to use for the boost role."
-                }
+                // {
+                //     type: 11,
+                //     name: "icon",
+                //     description: "The new role icon to use for the boost role."
+                // }
             ]
         },
         {
@@ -68,7 +68,7 @@ const command: Command = {
         }
     ],
     botPermissions: ["ManageRoles"],
-    permittedRoles: ["boost_role_bypass", "booster", "donator"],
+    permittedRoles: ["booster", "donator"],
     cooldown: 5,
     execute: async (
         interaction: ChatInputCommandInteraction,
@@ -107,9 +107,9 @@ const command: Command = {
             if (subcommand === "create") {
                 const name = (interaction.options.get("name")?.value as string) || interaction.user.username;
                 const color = interaction.options.get("color").value as ColorResolvable;
-                let icon = interaction.options.getAttachment("icon");
+                // let icon = interaction.options.getAttachment("icon");
 
-                if (interaction.guild.premiumSubscriptionCount < 7) icon = null;
+                // if (interaction.guild.premiumSubscriptionCount < 7) icon = null;
 
                 if (currentBoostRole) {
                     const existingRole = interaction.guild.roles.cache.get(currentBoostRole.role);
@@ -143,7 +143,7 @@ const command: Command = {
                 const role = await interaction.guild.roles.create({
                     name,
                     color,
-                    icon: icon?.url ?? null,
+                    // icon: icon?.url ?? null,
                     position,
                     permissions: []
                 });
@@ -154,7 +154,7 @@ const command: Command = {
 
                 const created = new Discord.EmbedBuilder()
                     .setColor(color)
-                    .setThumbnail(role.iconURL())
+                    // .setThumbnail(role.iconURL())
                     .setTitle("Boost Role Created")
                     .addFields(
                         { name: "Name", value: `\`${role.name}\``, inline: true },
@@ -178,7 +178,7 @@ const command: Command = {
 
                 const name = interaction.options.get("name")?.value as string | null;
                 const color = interaction.options.get("color")?.value as ColorResolvable | null;
-                const icon = interaction.options.getAttachment("icon");
+                // const icon = interaction.options.getAttachment("icon");
 
                 const role = interaction.guild.roles.cache.get(currentBoostRole.role);
 
@@ -209,13 +209,13 @@ const command: Command = {
                     await role.setColor(color);
                 }
 
-                if (icon) {
-                    await role.setIcon(icon.url);
-                }
+                // if (icon) {
+                //     await role.setIcon(icon.url);
+                // }
 
                 const updatedEmbed = new Discord.EmbedBuilder()
                     .setColor(role.color)
-                    .setAuthor({ name: role.name, iconURL: role.iconURL() || undefined })
+                    .setAuthor({ name: role.name, /* iconURL: role.iconURL() || undefined */ })
                     .setDescription(`${emoji.tick} Your boost role has been updated!`);
 
                 await interaction.editReply({ embeds: [updatedEmbed] });
