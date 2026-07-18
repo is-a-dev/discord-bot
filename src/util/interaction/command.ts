@@ -1,8 +1,6 @@
 import ExtendedClient from "../../classes/ExtendedClient";
 import { ChatInputCommandInteraction, ColorResolvable, MessageFlags } from "discord.js";
 
-import Command from "../../classes/Command";
-
 import { emojis as emoji } from "../../../config.json";
 
 const cooldowns = new Map();
@@ -13,7 +11,7 @@ export = async (
     interaction: ChatInputCommandInteraction
 ) => {
     try {
-        const command: Command = client.commands.get(interaction.commandName);
+        const command = client.commands.get(interaction.commandName);
 
         if (!command) return;
 
@@ -26,9 +24,9 @@ export = async (
             return;
         }
 
-        const member = await interaction?.guild.members.fetch(interaction.user.id);
+        const member = await interaction.guild?.members.fetch(interaction.user.id);
 
-        if (command.permittedRoles.length && !member?.roles.cache.has(client.config.roles.owner as string)) {
+        if (command.permittedRoles?.length && !member?.roles.cache.has(client.config.roles.owner as string)) {
             let permitted = false;
 
             for (const role of command.permittedRoles) {
@@ -57,7 +55,7 @@ export = async (
             }
         }
 
-        if (command.botPermissions.length) {
+        if (command.botPermissions?.length) {
             const invalidPerms = [];
 
             for (const perm of command.botPermissions as any) {
@@ -116,7 +114,7 @@ export = async (
 
         const currentTime = Date.now();
         const timeStamps = cooldowns.get(command.name);
-        const cooldownAmount = command.cooldown * 1000;
+        const cooldownAmount = (command.cooldown ?? 0) * 1000;
 
         if (timeStamps.has(interaction.user.id)) {
             const expirationTime = timeStamps.get(interaction.user.id) + cooldownAmount;

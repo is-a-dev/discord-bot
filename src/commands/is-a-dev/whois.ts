@@ -25,7 +25,7 @@ const command: Command = {
         Discord: typeof import("discord.js")
     ) => {
         try {
-            const subdomain = (interaction.options.get("subdomain").value as string).toLowerCase();
+            const subdomain = (interaction.options.get("subdomain")?.value as string).toLowerCase();
 
             const data = (await getDomains(client, { subdomain }))[0];
 
@@ -74,28 +74,28 @@ const command: Command = {
                         case "A":
                         case "AAAA":
                         case "NS":
-                            records.push(`**${key}**: \`${data.records[key].join("`, `")}\``);
+                            records.push(`**${key}**: \`${data.records[key]?.join("`, `")}\``);
                             break;
                         case "MX":
-                            const mxRecords = data.records.MX.sort(
+                            const mxRecords = data.records.MX?.sort(
                                 (a, b) =>
                                     typeof a === "object" && typeof b === "object" ? a.priority - b.priority : 0
                             ).map(
                                 (v) =>
                                     typeof v === "string" ? v : `${v.priority}: ${v.target}`
                             )
-                            records.push(`**${key}**: \`${mxRecords.join("`, `")}\``);
+                            records.push(`**${key}**: \`${mxRecords?.join("`, `")}\``);
                             break;
                         case "CAA":
                             records.push(
-                                `**${key}**: \`${data.records.CAA.map(
+                                `**${key}**: \`${data.records.CAA?.map(
                                     (entry) => `${entry.tag} ${entry.value}`
                                 ).join("`, `")}\``
                             );
                             break;
                         case "DS":
                             records.push(
-                                `**${key}**: \`${data.records.DS.map(
+                                `**${key}**: \`${data.records.DS?.map(
                                     (entry) =>
                                         `${entry.key_tag} ${entry.algorithm} ${entry.digest_type} ${entry.digest}`
                                 ).join("`, `")}\``
@@ -103,14 +103,14 @@ const command: Command = {
                             break;
                         case "SRV":
                             records.push(
-                                `**${key}**: \`${data.records.SRV.map(
+                                `**${key}**: \`${data.records.SRV?.map(
                                     (entry) => `${entry.priority} ${entry.weight} ${entry.port} ${entry.target}`
                                 ).join("`, `")}\``
                             );
                             break;
                         case "TLSA":
                             records.push(
-                                `**${key}**: \`${data.records.TLSA.map(
+                                `**${key}**: \`${data.records.TLSA?.map(
                                     (entry) =>
                                         `${entry.usage} ${entry.selector} ${entry.matching_type} ${entry.data}`
                                 ).join("`, `")}\``

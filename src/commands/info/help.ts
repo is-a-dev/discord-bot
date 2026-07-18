@@ -54,7 +54,7 @@ const command: Command = {
 
             const help = new Discord.EmbedBuilder()
                 .setColor(client.config.embeds.default as ColorResolvable)
-                .setThumbnail(client.user.displayAvatarURL({ extension: "png", forceStatic: false }))
+                .setThumbnail(client.user?.displayAvatarURL({ extension: "png", forceStatic: false }) ?? null)
                 .setTitle("Commands")
                 .setDescription(cmds.sort().join("\n"))
                 .setTimestamp();
@@ -71,8 +71,9 @@ const command: Command = {
                     return;
                 }
 
-                const botPermissions = command.botPermissions.length
-                    ? `\`${command.botPermissions.join("`, `")}\``
+                const botPermissionsList = command.botPermissions ?? [];
+                const botPermissions = botPermissionsList.length
+                    ? `\`${botPermissionsList.join("`, `")}\``
                     : "*N/A*";
                 const cooldown = command.cooldown
                     ? `${command.cooldown} second${command.cooldown === 1 ? "" : "s"}`

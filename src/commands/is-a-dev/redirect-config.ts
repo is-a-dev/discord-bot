@@ -25,7 +25,7 @@ const command: Command = {
         Discord: typeof import("discord.js")
     ) => {
         try {
-            const subdomain = (interaction.options.get("subdomain").value as string).toLowerCase();
+            const subdomain = (interaction.options.get("subdomain")?.value as string).toLowerCase();
 
             const data = (await getDomains(client, { subdomain }))[0];
 

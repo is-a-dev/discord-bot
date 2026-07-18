@@ -80,7 +80,18 @@ const command: Command = {
                 let emailToUse = data.email.toLowerCase();
 
                 if (!emails.some((e) => e.email.toLowerCase() === data.email.toLowerCase())) {
-                    emailToUse = emails.find((e) => e.primary).email.toLowerCase();
+                    const primaryEmail = emails.find((e) => e.primary)?.email?.toLowerCase() ?? emails[0]?.email?.toLowerCase();
+
+                    if (!primaryEmail) {
+                        const error = new Discord.EmbedBuilder()
+                            .setColor(client.config.embeds.error as ColorResolvable)
+                            .setDescription(`${emoji.cross} Could not determine a verified email for your GitHub account.`);
+
+                        await interaction.editReply({ embeds: [error] });
+                        return;
+                    }
+
+                    emailToUse = primaryEmail;
                 }
 
                 const updatedData = {
@@ -125,7 +136,7 @@ const command: Command = {
             }
 
             if (subcommand === "change-email") {
-                const email = (interaction.options.get("email").value as string).toLowerCase();
+                const email = interaction.options.getString("email", true).toLowerCase();
 
                 let data = await client.db.get(`github_connections.${interaction.user.id}`);
 
@@ -163,7 +174,18 @@ const command: Command = {
                         await interaction.editReply({ embeds: [error] });
                         return;
                     } else {
-                        const primaryEmail = emails.find((e) => e.primary).email.toLowerCase();
+                        const primaryEmail = emails.find((e) => e.primary)?.email?.toLowerCase() ?? emails[0]?.email?.toLowerCase();
+
+                        if (!primaryEmail) {
+                            const error = new Discord.EmbedBuilder()
+                                .setColor(client.config.embeds.error as ColorResolvable)
+                                .setDescription(
+                                    `${emoji.cross} Could not determine a verified email for your GitHub account.`
+                                );
+
+                            await interaction.editReply({ embeds: [error] });
+                            return;
+                        }
 
                         const updatedData = {
                             id: user.id,
@@ -233,7 +255,20 @@ const command: Command = {
                     let emailToUse = data.email.toLowerCase();
 
                     if (!emails.some((e) => e.email.toLowerCase() === data.email.toLowerCase())) {
-                        emailToUse = emails.find((e) => e.primary).email.toLowerCase();
+                        const primaryEmail = emails.find((e) => e.primary)?.email?.toLowerCase() ?? emails[0]?.email?.toLowerCase();
+
+                        if (!primaryEmail) {
+                            const error = new Discord.EmbedBuilder()
+                                .setColor(client.config.embeds.error as ColorResolvable)
+                                .setDescription(
+                                    `${emoji.cross} Could not determine a verified email for your GitHub account.`
+                                );
+
+                            await interaction.editReply({ embeds: [error] });
+                            return;
+                        }
+
+                        emailToUse = primaryEmail;
                     }
 
                     const newData = {
@@ -287,9 +322,28 @@ const command: Command = {
                 await interaction.editReply({ embeds: [loadingData] });
 
                 const user = await getUser(tokenAuth.token);
+
+                if (!user) {
+                    const error = new Discord.EmbedBuilder()
+                        .setColor(client.config.embeds.error as ColorResolvable)
+                        .setDescription(`${emoji.cross} Failed to load your GitHub account. Please try again.`);
+
+                    await interaction.editReply({ embeds: [error] });
+                    return;
+                }
+
                 const emails = await getUserEmails(tokenAuth.token);
 
-                const email = emails.find((e) => e.primary).email.toLowerCase();
+                const email = emails.find((e) => e.primary)?.email?.toLowerCase() ?? emails[0]?.email?.toLowerCase();
+
+                if (!email) {
+                    const error = new Discord.EmbedBuilder()
+                        .setColor(client.config.embeds.error as ColorResolvable)
+                        .setDescription(`${emoji.cross} Could not determine a verified email for your GitHub account.`);
+
+                    await interaction.editReply({ embeds: [error] });
+                    return;
+                }
 
                 await client.db.set(`github_connections.${interaction.user.id}`, {
                     id: user.id,

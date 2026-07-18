@@ -8,7 +8,7 @@ const event: ClientEvent = {
     once: true,
     execute: async (client: ExtendedClient) => {
         try {
-            console.log(`Logged in as: ${client.user.tag}`);
+            console.log(`Logged in as: ${client.user?.tag}`);
             await registerCommands(client, client.config.guild);
 
             // Assign all users the correct roles
@@ -69,10 +69,10 @@ const event: ClientEvent = {
             const boostUserIds: string[] = Object.keys(boostRoles);
 
             for (const userId of boostUserIds) {
-                const user = guild.members.cache.get(userId);
+                const user = guild?.members.cache.get(userId);
 
                 const roleId = boostRoles[userId];
-                const role = guild.roles.cache.get(roleId);
+                const role = guild?.roles.cache.get(roleId);
 
                 if (!role) {
                     await client.db.delete(`boost_roles.${userId}`);

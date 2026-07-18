@@ -13,8 +13,8 @@ type Role = keyof typeof roles;
 
 export default class Command {
     public type?: ApplicationCommandType;
-    public name: string;
-    public description: string;
+    public name!: string;
+    public description!: string;
     public options?: (ApplicationCommandOption & { nameLocalized?: string; descriptionLocalized?: string })[];
     public default_member_permissions?: Readonly<PermissionsBitField>;
     public integration_types?: ApplicationIntegrationType[];
@@ -26,6 +26,6 @@ export default class Command {
     public deferReply?: boolean;
     public ephemeral?: boolean;
     public ownerOnly?: boolean;
-    public execute: Function;
+    public execute!: Function;
     public autocomplete?: Function;
 }

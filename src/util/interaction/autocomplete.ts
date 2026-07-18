@@ -1,18 +1,17 @@
 import ExtendedClient from "../../classes/ExtendedClient";
-import Command from "../../classes/Command";
 import { AutocompleteInteraction } from "discord.js";
 
 export = async (client: ExtendedClient, interaction: AutocompleteInteraction) => {
     try {
-        const command: Command = client.commands.get(interaction.commandName);
+        const command = client.commands.get(interaction.commandName);
 
         if (!command) return;
 
         if (!command.enabled || !command.autocomplete) return await interaction.respond([]);
 
-        const member = await interaction?.guild.members.fetch(interaction.user.id);
+        const member = await interaction.guild?.members.fetch(interaction.user.id);
 
-        if (command.permittedRoles.length && !member?.roles.cache.has(client.config.roles.owner)) {
+        if (command.permittedRoles?.length && !member?.roles.cache.has(client.config.roles.owner)) {
             let permitted = false;
 
             for (const role of command.permittedRoles) {
@@ -30,7 +29,7 @@ export = async (client: ExtendedClient, interaction: AutocompleteInteraction) =>
             }
         }
 
-        if (command.botPermissions.length) {
+        if (command.botPermissions?.length) {
             const invalidPerms = [];
 
             for (const perm of command.botPermissions as any) {

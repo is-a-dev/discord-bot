@@ -55,15 +55,15 @@ export async function getDomains(
     }
 ): Promise<Domain[]> {
     const {
-        excludeIAD,
-        excludeUnderscores,
-        excludeFlags,
-        hasFlags,
-        hasRecords,
-        resultLimit,
-        subdomain,
-        subdomainIncludes,
-        username
+        excludeIAD = false,
+        excludeUnderscores = false,
+        excludeFlags = [],
+        hasFlags = [],
+        hasRecords = [],
+        resultLimit = 0,
+        subdomain = null,
+        subdomainIncludes = "",
+        username = null
     } = options;
 
     if (
@@ -138,14 +138,14 @@ export function loadHandlers(client: ExtendedClient): void {
 
 export function processGitHubMarkdown(content: string): string {
     content = content.trim();
-    content = content.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, (match, text, url) => `[${text}](${url})`);
+    content = content.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, (_match, text, url) => `[${text}](${url})`);
     content = content.replace(/<!--[\s\S]*?-->/g, "");
     content = content.replace(/<[^>]+>/g, "");
-    content = content.replace(/```[\s\S]*?```/g, (match) => {
-        const codeContent = match.replace(/```/g, "").trim();
+    content = content.replace(/```[\s\S]*?```/g, (_match) => {
+        const codeContent = _match.replace(/```/g, "").trim();
         return `\`${codeContent}\``;
     });
-    content = content.replace(/`([^`]+)`/g, (match, code) => `\`${code}\``);
+    content = content.replace(/`([^`]+)`/g, (_match, code) => `\`${code}\``);
     content = content.replace(/\[x\]/g, "✅").replace(/\[ \]/g, "❌");
 
     return content;

@@ -16,7 +16,7 @@ const event: GuildEvent = {
 
             if (message.author.bot || !message.content) return;
             if (!message.guild || message.guild.id !== client.config.guild) return;
-            if (!message.guild.members.me.permissions.has(requiredPerms)) return;
+            if (!message.guild.members.me?.permissions.has(requiredPerms)) return;
 
             // GitHub Pull Requests
             const matches = [...message.content.matchAll(/##(\d{1,7})/g)];
@@ -62,7 +62,7 @@ const event: GuildEvent = {
 
                 if (data.length > 1) {
                     for (const res of data) {
-                        let state: State = null;
+                        let state: State | null = null;
 
                         if (res.pull_request)
                             state =
@@ -91,7 +91,7 @@ const event: GuildEvent = {
                 } else {
                     const res = data[0];
 
-                    let state: State = null;
+                    let state: State | null = null;
 
                     if (res.pull_request)
                         state =

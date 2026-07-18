@@ -34,7 +34,7 @@ const command: Command = {
         Discord: typeof import("discord.js")
     ) => {
         try {
-            const content = interaction.options.get("content").value as string;
+            const content = interaction.options.get("content")?.value as string;
             const tabWidth = (interaction.options.get("tab-width")?.value as number) || 2;
 
             let data;

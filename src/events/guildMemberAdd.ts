@@ -10,7 +10,7 @@ const event: GuildEvent = {
 
             const guild = member.guild;
 
-            if (guild.id !== client.config.guild || !guild.members.me.permissions.has(requiredPerms)) return;
+            if (guild.id !== client.config.guild || !guild.members.me?.permissions.has(requiredPerms)) return;
 
             const roles = client.config.roles;
 

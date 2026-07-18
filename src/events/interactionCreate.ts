@@ -12,7 +12,7 @@ const event: GuildEvent = {
             const requiredPerms: PermissionResolvable = ["SendMessages", "EmbedLinks"];
 
             if (!interaction.guild || interaction.guild.id !== client.config.guild) return;
-            if (!interaction.guild.members.me.permissions.has(requiredPerms)) return;
+            if (!interaction.guild.members.me?.permissions.has(requiredPerms)) return;
 
             if (interaction.isAutocomplete()) return await autocompleteHandler(client, interaction);
             if (interaction.isChatInputCommand()) return await commandHandler(client, Discord, interaction);

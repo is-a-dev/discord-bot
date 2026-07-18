@@ -78,8 +78,9 @@ const command: Command = {
         try {
             const subcommand = interaction.options.getSubcommand();
 
-            const brBelow = interaction.guild.roles.cache.get(client.config.roles.boost_role_below);
-            const brAbove = interaction.guild.roles.cache.get(client.config.roles.boost_role_above);
+            const guild = interaction.guild;
+            const brBelow = guild?.roles.cache.get(client.config.roles.boost_role_below);
+            const brAbove = guild?.roles.cache.get(client.config.roles.boost_role_above);
 
             if (!brBelow || !brAbove || brBelow?.position <= brAbove?.position) {
                 const error = new Discord.EmbedBuilder()
@@ -90,7 +91,9 @@ const command: Command = {
                 return;
             }
 
-            if (interaction.guild.members.me.roles.highest.position <= brBelow.position) {
+            const me = guild?.members.me;
+
+            if (!guild || !me || me.roles.highest.position <= brBelow.position) {
                 const error = new Discord.EmbedBuilder()
                     .setColor(client.config.embeds.error as ColorResolvable)
                     .setDescription(`${emoji.cross} I do not have permission to manage boost roles.`);
@@ -99,20 +102,20 @@ const command: Command = {
                 return;
             }
 
-            const member = interaction.guild.members.cache.get(interaction.user.id);
+            const member = guild?.members.cache.get(interaction.user.id);
             const currentBoostRole = await client.db.get(`boost_roles.${interaction.user.id}`);
 
             const colorRegex = /^#([0-9A-F]{6}|[0-9A-F]{3})$/i;
 
             if (subcommand === "create") {
                 const name = (interaction.options.get("name")?.value as string) || interaction.user.username;
-                const color = interaction.options.get("color").value as ColorResolvable;
+                const color = interaction.options.get("color")?.value as ColorResolvable;
                 // let icon = interaction.options.getAttachment("icon");
 
                 // if (interaction.guild.premiumSubscriptionCount < 7) icon = null;
 
                 if (currentBoostRole) {
-                    const existingRole = interaction.guild.roles.cache.get(currentBoostRole.role);
+                    const existingRole = guild?.roles.cache.get(currentBoostRole.role);
 
                     if (existingRole) {
                         const roleExists = new Discord.EmbedBuilder()
@@ -140,7 +143,7 @@ const command: Command = {
                 const position =
                     Math.floor(Math.random() * (brBelow.position - brAbove.position - 1)) + brAbove.position + 1;
 
-                const role = await interaction.guild.roles.create({
+                const role = await guild?.roles.create({
                     name,
                     color,
                     // icon: icon?.url ?? null,
@@ -148,17 +151,17 @@ const command: Command = {
                     permissions: []
                 });
 
-                await member.roles.add(role);
+                if (role) await member?.roles.add(role);
 
-                await client.db.set(`boost_roles.${interaction.user.id}`, { role: role.id });
+                await client.db.set(`boost_roles.${interaction.user.id}`, { role: role?.id });
 
                 const created = new Discord.EmbedBuilder()
                     .setColor(color)
                     // .setThumbnail(role.iconURL())
                     .setTitle("Boost Role Created")
                     .addFields(
-                        { name: "Name", value: `\`${role.name}\``, inline: true },
-                        { name: "Color", value: `\`${role.hexColor}\``, inline: true }
+                        { name: "Name", value: `\`${role?.name}\``, inline: true },
+                        { name: "Color", value: `\`${role?.hexColor}\``, inline: true }
                     )
                     .setTimestamp();
 
@@ -180,7 +183,7 @@ const command: Command = {
                 const color = interaction.options.get("color")?.value as ColorResolvable | null;
                 // const icon = interaction.options.getAttachment("icon");
 
-                const role = interaction.guild.roles.cache.get(currentBoostRole.role);
+                const role = interaction.guild?.roles.cache.get(currentBoostRole.role);
 
                 if (!role) {
                     await client.db.delete(`boost_roles.${interaction.user.id}`);
@@ -210,7 +213,7 @@ const command: Command = {
                 }
 
                 // if (icon) {
-                //     await role.setIcon(icon.url);
+                //     await role?.setIcon(icon.url);
                 // }
 
                 const updatedEmbed = new Discord.EmbedBuilder()
@@ -232,7 +235,7 @@ const command: Command = {
                     return;
                 }
 
-                const role = interaction.guild.roles.cache.get(currentBoostRole.role);
+                const role = interaction.guild?.roles.cache.get(currentBoostRole.role);
 
                 if (!role) {
                     await client.db.delete(`boost_roles.${interaction.user.id}`);
