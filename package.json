@@ -20,9 +20,9 @@
   "dependencies": {
     "@octokit/auth-oauth-device": "8.0.3",
     "@octokit/core": "7.0.6",
-    "@opentelemetry/instrumentation": "0.220.0",
-    "@sentry/node": "10.66.0",
-    "@sentry/profiling-node": "10.66.0",
+    "@opentelemetry/instrumentation": "0.221.0",
+    "@sentry/node": "10.68.0",
+    "@sentry/profiling-node": "10.68.0",
     "axios": "1.18.1",
     "better-sqlite3": "12.11.1",
     "discord.js": "14.27.0",
