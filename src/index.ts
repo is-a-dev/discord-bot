@@ -25,8 +25,8 @@ const client = new ExtendedClient({
     presence: {
         activities: [
             {
-                name: "over is-a.dev",
-                type: Discord.ActivityType.Watching
+                name: "Watching over is-a.dev",
+                type: Discord.ActivityType.Custom
             }
         ],
         status: "online"
