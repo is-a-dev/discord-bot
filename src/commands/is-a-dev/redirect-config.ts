@@ -7,7 +7,7 @@ import { getDomains } from "../../util/functions";
 
 const command: Command = {
     name: "redirect-config",
-    description: "Get a is-a.dev subdomain's redirect configuration.",
+    description: "Get a subdomain's redirect configuration.",
     options: [
         {
             type: 3,
