@@ -2,7 +2,6 @@ import Command from "../../classes/Command";
 import ExtendedClient from "../../classes/ExtendedClient";
 import { AutocompleteInteraction, ChatInputCommandInteraction, ColorResolvable } from "discord.js";
 
-import axios from "axios";
 import { emojis as emoji } from "../../../config.json";
 import { getDomains } from "../../util/functions";
 
@@ -40,9 +39,8 @@ const command: Command = {
                 return;
             }
 
-            const data = (
-                await axios.get(`https://raw.githubusercontent.com/is-a-dev/register/main/domains/${subdomain}.json`)
-            ).data;
+            const res = await fetch(`https://raw.githubusercontent.com/is-a-dev/register/main/domains/${subdomain}.json`);
+            const data = await res.json();
 
             if (data.internal || data.reserved) {
                 const internalError = new Discord.EmbedBuilder()
