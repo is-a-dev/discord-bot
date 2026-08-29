@@ -199,3 +199,12 @@ export type RecordsObject = {
     TXT?: string | string[];
     URL?: URL;
 };
+
+export async function getOpenPRCount(): Promise<number | Error> {
+    try {
+        const res = await axios.get("https://api.github.com/repos/is-a-dev/register/pulls?state=open");
+        return res.data.length;
+    } catch (err) {
+        return new Error(`${err}`);
+    }
+}
