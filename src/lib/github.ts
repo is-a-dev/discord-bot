@@ -1,6 +1,6 @@
 import { Octokit } from "@octokit/core";
 
-export async function getUser(token: string): Promise<{ username: string; id: number; avatar: string } | null> {
+export async function getUser(token: string): Promise<{ username: string; id: number | bigint; avatar: string } | null> {
     try {
         const octokit = new Octokit({ auth: token });
         const user = await octokit.request("GET /user");
