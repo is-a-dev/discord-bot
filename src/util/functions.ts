@@ -1,14 +1,14 @@
 import ExtendedClient from "../classes/ExtendedClient";
 
 import Discord from "discord.js";
-import axios from "axios";
 import fs from "fs";
 
 export async function cacheRawAPI(client: ExtendedClient): Promise<void> {
     try {
-        const res = (await axios.get("https://raw.is-a.dev/v2.json")).data;
+        const res = await fetch("https://raw.is-a.dev/v2.json");
+        const json = await res.json();
 
-        client.rawAPICache = res;
+        client.rawAPICache = json;
         client.rawAPICacheLastUpdated = new Date();
 
         console.log("Raw API cache updated successfully.");

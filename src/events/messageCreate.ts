@@ -2,7 +2,6 @@ import { GuildEvent } from "../classes/Event";
 import ExtendedClient from "../classes/ExtendedClient";
 import { ColorResolvable, Message, PermissionResolvable } from "discord.js";
 
-import axios from "axios";
 import { emojis as emoji } from "../../config.json";
 import { cap, processGitHubMarkdown } from "../util/functions";
 
@@ -29,10 +28,9 @@ const event: GuildEvent = {
 
                 for (const prId of prIds) {
                     try {
-                        const res = (await axios.get(`https://api.github.com/repos/is-a-dev/register/issues/${prId}`))
-                            .data;
-
-                        data.push(res);
+                        const res = await fetch(`https://api.github.com/repos/is-a-dev/register/issues/${prId}`);
+                        const json = await res.json();
+                        data.push(json);
                     } catch {
                         continue;
                     }
