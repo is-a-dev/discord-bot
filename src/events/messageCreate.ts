@@ -24,7 +24,7 @@ const event: GuildEvent = {
             const descMatch = message.content.match(/###(\d{1,7})/);
 
             if (prIds.length > 0) {
-                const data = [];
+                const data: any[] = [];
 
                 for (const prId of prIds) {
                     try {

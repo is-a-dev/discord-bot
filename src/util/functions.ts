@@ -6,9 +6,13 @@ import fs from "fs";
 export async function cacheRawAPI(client: ExtendedClient): Promise<void> {
     try {
         const res = await fetch("https://raw.is-a.dev/v2.json");
-        const json = await res.json();
+        const json: unknown = await res.json();
 
-        client.rawAPICache = json;
+        if (!Array.isArray(json)) {
+            throw new Error("Raw API response is not an array");
+        }
+
+        client.rawAPICache = json as Domain[];
         client.rawAPICacheLastUpdated = new Date();
 
         console.log("Raw API cache updated successfully.");
@@ -202,8 +206,14 @@ export type RecordsObject = {
 
 export async function getOpenPRCount(): Promise<number | Error> {
     try {
-        const res = await axios.get("https://api.github.com/repos/is-a-dev/register/pulls?state=open");
-        return res.data.length;
+        const res = await fetch("https://api.github.com/repos/is-a-dev/register/pulls?state=open");
+        const json: unknown = await res.json();
+
+        if (!Array.isArray(json)) {
+            throw new Error("GitHub pulls response is not an array");
+        }
+
+        return json.length;
     } catch (err) {
         return new Error(`${err}`);
     }

@@ -40,9 +40,9 @@ const command: Command = {
             }
 
             const res = await fetch(`https://raw.githubusercontent.com/is-a-dev/register/main/domains/${subdomain}.json`);
-            const data = await res.json();
+            const data = (await res.json()) as { internal?: boolean; reserved?: boolean } | null;
 
-            if (data.internal || data.reserved) {
+            if (data?.internal || data?.reserved) {
                 const internalError = new Discord.EmbedBuilder()
                     .setColor(client.config.embeds.error as ColorResolvable)
                     .setDescription(
