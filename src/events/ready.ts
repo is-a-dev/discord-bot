@@ -25,7 +25,7 @@ const event: ClientEvent = {
                 client.user?.setActivity({
                     name: "Status",
                     type: ActivityType.Custom,
-                    state: `Reviewing ${prCount} pull requests`
+                    state: `Reviewing ${prCount} pull request${prCount === 1 ? "" : "s"}`
                 });
             };
 
