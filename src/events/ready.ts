@@ -1,6 +1,8 @@
+import { ActivityType } from "discord.js";
 import { ClientEvent } from "../classes/Event";
 import ExtendedClient from "../classes/ExtendedClient";
 
+import { getOpenPRCount } from "../util/functions";
 import registerCommands from "../scripts/register";
 
 const event: ClientEvent = {
@@ -10,6 +12,25 @@ const event: ClientEvent = {
         try {
             console.log(`Logged in as: ${client.user?.tag}`);
             await registerCommands(client, client.config.guild);
+
+            // Set status
+            const updateStatus = async () => {
+                const prCount = await getOpenPRCount();
+
+                if (prCount instanceof Error) {
+                    client.user?.setPresence({ activities: [] });
+                    return;
+                }
+
+                client.user?.setActivity({
+                    name: "Status",
+                    type: ActivityType.Custom,
+                    state: `Reviewing ${prCount} pull requests`
+                });
+            };
+
+            await updateStatus();
+            setInterval(updateStatus, 60000);
 
             // Assign all users the correct roles
             const guild = client.guilds.cache.get(client.config.guild);

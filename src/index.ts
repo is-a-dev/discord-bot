@@ -23,12 +23,6 @@ const client = new ExtendedClient({
         Discord.GatewayIntentBits.MessageContent
     ],
     presence: {
-        activities: [
-            {
-                name: "Watching over is-a.dev",
-                type: Discord.ActivityType.Custom
-            }
-        ],
         status: "online"
     }
 });
