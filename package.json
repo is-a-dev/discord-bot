@@ -18,11 +18,11 @@
     "start": "npm run build && node dist/index.js"
   },
   "dependencies": {
-    "@octokit/auth-oauth-device": "8.0.3",
-    "@octokit/core": "7.0.6",
-    "@opentelemetry/instrumentation": "0.220.0",
-    "@sentry/node": "10.66.0",
-    "@sentry/profiling-node": "10.66.0",
+    "@octokit/auth-oauth-device": "8.0.4",
+    "@octokit/core": "7.0.7",
+    "@opentelemetry/instrumentation": "0.221.0",
+    "@sentry/node": "10.72.0",
+    "@sentry/profiling-node": "10.72.0",
     "better-sqlite3": "12.11.1",
     "discord.js": "14.27.0",
     "dns-query": "0.11.2",
@@ -30,7 +30,7 @@
     "quick.db": "9.1.7"
   },
   "devDependencies": {
-    "@types/node": "26.1.1",
+    "@types/node": "26.4.0",
     "typescript": "7.0.2"
   }
 }
