@@ -30,7 +30,7 @@ const event: ClientEvent = {
             };
 
             await updateStatus();
-            const statusUpdateInt = setInterval(updateStatus, 60000);
+            setInterval(updateStatus, 60000);
 
             // Assign all users the correct roles
             const guild = client.guilds.cache.get(client.config.guild);
