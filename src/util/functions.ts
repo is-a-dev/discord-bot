@@ -206,14 +206,9 @@ export type RecordsObject = {
 
 export async function getOpenPRCount(): Promise<number | Error> {
     try {
-        const res = await fetch("https://api.github.com/repos/is-a-dev/register/pulls?state=open&per_page=100");
-        const json: unknown = await res.json();
-
-        if (!Array.isArray(json)) {
-            throw new Error("GitHub pulls response is not an array");
-        }
-
-        return json.length;
+        const res = await fetch("https://api.github.com/search/issues?q=type:pr+state:open+repo:is-a-dev/register");
+        const json: any = await res.json();
+        return json.total_count;
     } catch (err) {
         return new Error(`${err}`);
     }
